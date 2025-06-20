@@ -6,6 +6,14 @@ const nextConfig: NextConfig = {
   sassOptions: {
     implementation: "sass-embedded",
   },
+
+  images: {
+    remotePatterns: [
+      {
+        hostname: "crafatar.com",
+      },
+    ],
+  },
 };
 
 export default nextConfig;
