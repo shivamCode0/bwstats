@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>BW Stats: #1 Hypixel Bedwars Stats Checker</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css" />
+    <script src="/custom-bs-collapse-v1.js"></script>
+
+    <link rel="stylesheet" href="/css/main.css" />
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        var viewStatsBtn = document.getElementById("viewstatsbtn");
+        var inputMC = document.getElementById("input-mcusername");
+        var viewStatsForm = document.getElementById("viewstatsform");
+        viewStatsForm.addEventListener("submit", function (ev) {
+          ev.preventDefault();
+
+          if (inputMC.value.length > 0) window.location.href = `/user/${inputMC.value}`;
+          else alert("Enter your username to see your stats.");
+        });
+      });
+    </script>
+    <meta name="description" content="This easy and detailed Bedwars stat checker is the best way to see your success. Get all of the info you need in one place." />
+    <meta name="keywords" content="bw, bedwars, stat, stats, hypixel, checker, tracker, bot, bed, war, wars, online, bed wars, bwstats, bw stats, statistic, statistics" />
+
+    <!-- Favicon Package -->
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png?v=47xnmPod6a" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=47xnmPod6a" />
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png?v=47xnmPod6a" />
+    <link rel="manifest" href="/site.webmanifest?v=47xnmPod6a" />
+    <link rel="mask-icon" href="/safari-pinned-tab.svg?v=47xnmPod6a" color="#5bbad5" />
+    <link rel="shortcut icon" href="/favicon.ico?v=47xnmPod6a" />
+    <meta name="msapplication-TileColor" content="#b91d47" />
+    <meta name="theme-color" content="#ffffff" />
+    <!-- End Favicon Package -->
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/"><img src="/short_bed.png" alt="BW Stats" height="32" width="32" />&nbsp; Hypixel Bedwars Stats</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-content" aria-controls="nav-content" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="nav-content">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item"><a class="nav-link active" href="/" aria-current="page">Stats</a></li>
+            <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="/leaderboards">Leaderboards</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!-- Image Credit: https://hypixel.net/threads/bedwars-poster.1479980/ -->
+    <div class="hero-image">
+      <div class="hero-text">
+        <h1>Bedwars Stats</h1>
+        <label for="input-mcusername" class="h5 mb-3">Enter your username to see your stats.</label>
+        <form class="input-group mb-3" id="viewstatsform" method="GET" action="/user">
+          <input name="user" type="text" class="form-control input-lg" placeholder="Minecraft Username" id="input-mcusername" required oninput="this.value = this.value.replace(/\s/g, '')" />
+          <button class="btn btn-lg btn-primary" type="submit" id="viewstatsbtn">View Stats</button>
+        </form>
+      </div>
+    </div>
+    <div class="container mt-3">
+      <h2 class="text-center">Hypixel Bedwars Stats</h2>
+      <p>
+        Welcome to bwstats.shivam.pro! You can find statistics for Bedwars players on Hypixel on this website. Tip: You should check your stats and share the link with your friends to show how amazing
+        you are.
+      </p>
+      <hr />
+      <h3>How to Use</h3>
+      <p>This website, bwstats.shivam.pro, is very easy to use. Type in the username of the player you want to see data for. Then, press the blue "View Stats" button to see the stats.</p>
+      <h3>Additional Information</h3>
+      <p>
+        You can see player and game data and Hypixel stats for Bedwars on this website. This is a tracker for a player's stats in Bedwars (BW) and is also a stat checker. You could add your stats link
+        to your Hypixel forum signature and share it with your friends. We are currently developing a leaderboard for bedwars and more cool things. See your total bedwars stats in hypixel and this is
+        how you check stats. We appreciate you visiting!
+      </p>
+      <h3>API Information</h3>
+      <p>
+        <strong>Note: The API is being reworked because of API access restrictions.</strong> The API returns nicely-formatted JSON of a player's stats.
+        <br />
+        <code>GET</code>
+        https://bwstats.shivam.pro/api-v1/user/<code>{user}</code>?key=<code>{apikey}</code>
+      </p>
+      <ul>
+        <li><code>{user}</code> - Player (username or uuid)</li>
+        <li><code>{apikey}</code> - Your Hypixel API key (This is necessary to use the API.)</li>
+        <!-- <li>Extra Modes Data - Add <code>&extra=1</code> to the end of the URL.</li> -->
+      </ul>
+    </div>
+    <footer class="navbar navbar-dark bg-dark text-light footer">
+      <div class="container-fluid text-center">
+        <p class="text-center w-100 my-3">This website was made by <a href="https://shivam.pro">Shivam</a>. Copyright &copy; 2023 shivam.pro. All rights reserved.</p>
+      </div>
+    </footer>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "fc6b8791fdb34ef18323c982296dda89"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+  </body>
+</html>

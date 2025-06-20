@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Data Viewer</title>
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png?v=47xnmPod6a" />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.1/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-+0n0xVW2eSR5OomGNYDnhzAbDsOXxcvSN1TPprVMTNDbiYZCxYbOOl7+AMvyTG2x"
+      crossorigin="anonymous"
+    />
+  </head>
+  <body>
+    <div class="container">
+      <table class="table">
+        <tr>
+          <th>Username</th>
+          <th>Date/Time</th>
+          <th>Level</th>
+          <th>Final K/D</th>
+          <th>IP</th>
+          <th>Cached</th>
+        </tr>
+        <% data.forEach(v => { %>
+        <tr>
+          <td><%- v.username %></td>
+          <td><%- v.time.toLocaleString("en-US", { timeZone: "America/New_York" }) %></td>
+          <td><%- v.data.stats.level %></td>
+          <td><%- v.data.stats.modes.total.fkdr %></td>
+          <td><%- v.ip %></td>
+          <td><%- v.data.cached %></td>
+        </tr>
+        <% }); %>
+      </table>
+    </div>
+  </body>
+</html>

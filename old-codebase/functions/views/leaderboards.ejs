@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <% if (success === true) {%>
+    <title>Leaderboards | BW Stats</title>
+    <meta name="og:description" content="Hypixel Bedwars Leaderboards" />
+    <meta name="description" content="Hypixel Bedwars Leaderboards" />
+    <% } else {%>
+    <title>Error - BW Stats</title>
+    <% } %>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5/dist/css/bootstrap.min.css" />
+    <script src="/custom-bs-collapse-v1.js"></script>
+    <% if (false && success === true) {%>
+    <script>
+      let a = 1;
+      /* prettier-ignore */ let data = JSON.parse('<%- JSON.stringify(data) %>');
+      console.log(data);
+    </script>
+    <% } %>
+    <link rel="stylesheet" href="/css/main.css" />
+    <style>
+      .lb-player-icon-box {
+        position: relative;
+        width: 100%;
+        padding-top: 100%; /* 1:1 Aspect Ratio */
+        width: 4em;
+        height: 4em;
+      }
+
+      .lb-player-icon-box2 img {
+        text-align: center;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        width: 100%;
+        height: 100%;
+        image-rendering: pixelated;
+      }
+      .lb-player-icon-box2 {
+        padding: 1em;
+      }
+      .lb-player-card {
+        min-width: min(90vw, 20em);
+        max-width: 20em;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .lb-player-card h5 {
+        font-size: 1.25em;
+        margin-bottom: 0.25em;
+      }
+
+      .lb-list-mode .lb-player-card {
+        margin-bottom: 0.25em !important;
+        width: 100%;
+        min-width: none;
+        max-width: none;
+      }
+      .lb-list-mode .lb-player-card .card-body {
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        padding: 0.3em;
+        align-items: center;
+      }
+      .lb-list-mode .lb-player-card .card-title {
+        flex: 2;
+        min-width: 8em;
+      }
+      .lb-list-mode .lb-player-card .card-text {
+        flex: 3;
+        min-width: 12em;
+      }
+      .lb-list-mode .lb-player-card .lb-player-icon-box {
+        width: 1.75em;
+        height: 1.75em;
+      }
+      .lb-list-mode .lb-player-card .lb-player-icon-box2 {
+        padding: 0.3em 1em;
+      }
+    </style>
+    <script>
+      window.addEventListener("DOMContentLoaded", function () {
+        [...document.querySelectorAll(".change-time")].forEach((timeElem) => {
+          let timeStr = timeElem.attributes.getNamedItem("datetime").value;
+          // console.log(timeStr);
+          timeElem.innerHTML = new Date(timeStr).toLocaleTimeString();
+        });
+
+        let usingListMode = false;
+        if (localStorage.getItem("bwstats_lblistMode") === "yes") usingListMode = true;
+
+        let lb = document.getElementById("toggleListMode");
+        let btn1 = document.getElementById("cardModeButton");
+        let btn2 = document.getElementById("listModeButton");
+
+        btn1.addEventListener("click", function () {
+          usingListMode = false;
+          localStorage.setItem("bwstats_lblistMode", "no");
+
+          lb.classList.remove("lb-list-mode");
+          btn1.classList.add("btn-primary");
+          btn1.classList.remove("btn-outline-primary");
+          btn2.classList.add("btn-outline-primary");
+          btn2.classList.remove("btn-primary");
+        });
+        btn2.addEventListener("click", function () {
+          usingListMode = false;
+          localStorage.setItem("bwstats_lblistMode", "yes");
+
+          lb.classList.add("lb-list-mode");
+          btn1.classList.add("btn-outline-primary");
+          btn1.classList.remove("btn-primary");
+          btn2.classList.add("btn-primary");
+          btn2.classList.remove("btn-outline-primary");
+        });
+        if (usingListMode) btn2.click();
+
+        // document.body.style.backgroundImage = `linear-gradient(rgba(255,255,255,.2),rgba(255,255,255,.2)),url("/bgimg/${Math.floor(Math.random() * 15) + 1}.jpeg")`;
+      });
+    </script>
+    <style>
+      body {
+        background-image: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+          url("https://cdn.shivam.pro/app-static-data/images/bw-bg-compressed/<%- Math.floor(Math.random() * 14) + 1 %>.jpeg");
+        background-position: center;
+        background-repeat: no-repeat;
+        background-size: cover;
+        backdrop-filter: blur(3px);
+        background-attachment: fixed;
+      }
+      .stats-container {
+        backdrop-filter: blur(8px);
+        background-color: rgba(255, 255, 255, 0.7);
+      }
+    </style>
+  </head>
+  <body style="background-color: rgb(230, 230, 230); position: relative">
+    <nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="/"><img src="/short_bed.png" alt="BW Stats" height="32" width="32" />&nbsp; Hypixel Bedwars Stats</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav-content" aria-controls="nav-content" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="nav-content">
+          <ul class="navbar-nav me-auto">
+            <li class="nav-item"><a class="nav-link" href="/">Stats</a></li>
+            <li class="nav-item"><a class="nav-link" href="/about">About</a></li>
+            <li class="nav-item"><a class="nav-link" href="/leaderboards">Leaderboards</a></li>
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <div class="stats-container container-lg pt-1 mt-lg-4 mb-0 mb-lg-5 pb-<%= success ? 5 : 2 %>">
+      <% if (success === true) {%>
+      <main class="main px-4">
+        <h1 class="text-center my-3">Hypixel Bedwars Leaderboards</h1>
+        <p>
+          Our leaderboard shows all of the important data easily so you know who is leading the game currently. In the future, we may add more information regarding statistics and leaderboard data.
+        </p>
+        <hr />
+        <div class="" id="toggleListMode">
+          <div class="w-100 text-center">
+            <div class="btn-group" role="group" aria-label="Toggle list mode">
+              <button type="button" id="cardModeButton" class="btn btn-primary">Card Mode</button>
+              <button type="button" id="listModeButton" class="btn btn-outline-primary">List Mode</button>
+            </div>
+          </div>
+          <% Object.entries(data.stats).sort((a, b) => LB_ORDER.indexOf(a) - LB_ORDER.indexOf(b)).forEach(function(lb) { %>
+          <div>
+            <h2 class="text-center my-3"><%= FRIENDLY_LB_NAMES[lb[0]] || lb[0] %></h2>
+
+            <div class="" style="display: flex; flex-wrap: wrap; justify-content: center">
+              <% lb[1].forEach(function(player, i) { %>
+              <div class="card mb-3 mx-2 lb-player-card">
+                <div class="lb-player-icon-box2">
+                  <div class="lb-player-icon-box">
+                    <img class="img-fluid rounded lb-player-icon" src="https://crafatar.com/avatars/<%- player.uuid %>?overlay=true&size=16" alt="Player Icon" />
+                  </div>
+                </div>
+                <div class="card-body">
+                  <h5 class="card-title"><%- i + 1 %>. <%= player.username %></h5>
+                  <p class="card-text"><%= player.levelFormatted %>, <%= player.totalWins.toLocaleString() %> Wins, <%= player.totalFinalsFormatted %> Final Kills</p>
+                </div>
+              </div>
+              <% }); %>
+            </div>
+          </div>
+          <% }); %>
+        </div>
+        <p class="text-center m-2"><%- data.cached ? "Cached result" : "Result" %> from <time class="change-time" datetime="<%- data.time.toISOString() %>"><%- timeFormatted %></time></p>
+      </main>
+      <% } else { %> <% if (error.length > 50) {%>
+      <h1 class="text-center my-4">Error</h1>
+      <p class="text-center">Please try again in 1 minute.</p>
+      <p class="text-center my-4"><%- error %></p>
+      <% } else { %>
+      <h1 class="text-center my-4"><%- error %></h1>
+      <% } %> <% } %>
+    </div>
+    <footer class="navbar navbar-dark bg-dark text-light footer">
+      <div class="container-fluid text-center">
+        <p class="text-center w-100 my-3">This website was made by <a href="https://shivam.pro">Shivam</a>. Copyright &copy; 2023 shivam.pro. All rights reserved.</p>
+      </div>
+    </footer>
+    <% if (!process.env.FUNCTIONS_EMULATOR) { %>
+    <!-- Cloudflare Web Analytics -->
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "fc6b8791fdb34ef18323c982296dda89"}'></script>
+    <!-- End Cloudflare Web Analytics -->
+    <% } %>
+  </body>
+</html>

@@ -1,0 +1,14 @@
+{
+  "projects": {
+    "default": "shivam-api-1"
+  },
+  "targets": {
+    "shivam-api-1": {
+      "hosting": {
+        "bwstats": [
+          "bwstats-1"
+        ]
+      }
+    }
+  }
+}

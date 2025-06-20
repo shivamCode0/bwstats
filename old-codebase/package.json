@@ -1,0 +1,13 @@
+{
+  "scripts": {
+    "deploy": "firebase deploy",
+    "deploy hosting": "firebase deploy --only hosting",
+    "emulate": "firebase emulators:start",
+    "emulatehosting": "firebase emulators:start --only hosting",
+    "gitremovejunkfiles": "git clean -Xdf",
+    "fulldeploy": "yarn run gitremovejunkfiles && cd functions && yarn install && cd .. && yarn run deploy"
+  },
+  "dependencies": {
+    "@google-cloud/functions-framework": "^3.3.0"
+  }
+}

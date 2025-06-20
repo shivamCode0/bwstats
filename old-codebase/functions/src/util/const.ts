@@ -1,0 +1,213 @@
+export const FRIENDLY_MODE_NAMES = {
+  total: "Overall",
+  eight_one: "Solo",
+  eight_two: "Doubles",
+  four_three: "3v3v3v3",
+  four_four: "4v4v4v4",
+};
+export const FRIENDLY_EXTRA_MODE_NAMES = {
+  two_four: "4v4",
+  eight_one_rush: "Solo Rush",
+  eight_one_ultimate: "Solo Ultimate",
+  eight_two_lucky: "Doubles Lucky",
+  eight_two_armed: "Doubles Armed",
+  eight_two_rush: "Doubles Rush",
+  eight_two_swap: "Doubles Swap",
+  eight_two_ultimate: "Doubles Ultimate",
+  eight_two_voidless: "Doubles Voidless",
+  four_four_lucky: "4v4v4v4 Lucky",
+  four_four_armed: "4v4v4v4 Armed",
+  four_four_rush: "4v4v4v4 Rush",
+  four_four_swap: "4v4v4v4 Swap",
+  four_four_ultimate: "4v4v4v4 Ultimate",
+  four_four_voidless: "4v4v4v4 Voidless",
+  castle: "Castle",
+  tourney_bedwars4s_0: "Tourney 4v4v4v4",
+  tourney_bedwars_two_four_0: "Tourney 4v4",
+};
+export const FRIENDLY_STAT_NAMES = [
+  {
+    gamesPlayed: "Games Played",
+    wins: "Wins",
+    losses: "Losses",
+    wlr: "Win/Loss Ratio",
+  },
+  {
+    kills: "Kills",
+    deaths: "Deaths",
+    kdr: "K/D Ratio (KDR)",
+    finalKills: "Final Kills",
+    finalDeaths: "Final Deaths",
+    fkdr: "Final K/D Ratio (FKDR)",
+  },
+  {
+    winstreak: "Winstreak",
+    itemsPurchased: "Items Purchased",
+    bedsBroken: "Beds Broken",
+    bedsLost: "Beds Lost",
+    bblr: "Beds B/L Ratio (BBLR)",
+  },
+  {
+    ironCollected: "Iron Collected",
+    goldCollected: "Gold Collected",
+    diamondsCollected: "Diamonds Collected",
+    emeraldsCollected: "Emeralds Collected",
+    resourcesCollected: "Total Resources Collected",
+    // resourcesCollected1: "All Resources Collected1",
+  },
+];
+
+export const FRIENDLY_LB_NAMES = {
+  finalKills: "Lifetime Final Kills - All Modes",
+  level: "BW Level",
+  wins: "Lifetime Wins - All Modes",
+};
+
+export const LB_ORDER = ["level", "wins", "finalKills"];
+
+export const CHALLENGES = {
+  no_team_upgrades: { name: "Renegade", rules: ["Team upgrades and traps are disabled", "You cannot pick up diamonds"], reward: "Cat Death Cry", n: 0 },
+  no_utilities: { name: "Warmonger", rules: ["You cannot purchase nor use any utilities to aid you in battle."], reward: "Warrior Shopkeeper Skin", n: 1 },
+  selfish: { name: "Selfish", rules: ["You are too selfish to drop any items to other players", "Your team chest and enderchest are locked though"], reward: "Bite Projectile Trail", n: 2 },
+  slow_generator: { name: "Minimum Wage", rules: ["Your island resource generator is 2x slower"], reward: "It's Raining Gold Final Kill Effect", n: 3 },
+  assassin: {
+    name: "Assassin",
+    rules: [
+      "You can only break the bed of your assigned target",
+      "No other beds can be broken until you eliminate your target's entire team",
+      "After successfully eliminating your target team, a new target will be assigned",
+    ],
+    reward: "Assassin Island Topper",
+    n: 4,
+  },
+  reset_armor: {
+    name: "Regular Shopper",
+    rules: ["Any purchased armor upgrade will be removed upon death", "Any purchased tool upgrade will be removed upon death"],
+    reward: "Shopping Cart Island Topper",
+    n: 5,
+  },
+  invisible_shop: {
+    name: "Invisible Shop",
+    rules: ["Every item in the Item Shop and Team Upgrades is randomized and hidden", "The locations of each item will remain the same throughout the game"],
+    reward: "Invisible Villager Island Topper",
+    n: 6,
+  },
+  collector: {
+    name: "Collector",
+    rules: ["Collect all wool colors and return them to your shop keeper", "You must win the game after all team members return all wool colors"],
+    reward: "Collector's Chest Island Topper",
+    n: 7,
+  },
+  woodworker: {
+    name: "Woodworker",
+    rules: ["You can only purchase and pick up items made out of wood", "You cannot use your enderchest, it isn't made of wood!"],
+    reward: "Lumberjack Shopkeeper Skin",
+    n: 8,
+  },
+  sponge: { name: "Bridging for Dummies", rules: ["You cannot purchase any blocks other than sponge", "You cannot pick up any blocks"], reward: "Bridging for Dummies Kill Message", n: 9 },
+  toxic_rain: {
+    name: "Toxic Rain",
+    rules: ["There will be toxic rain throughout the game", "Standing in the rain drains items from your inventory", "The longer you are in the rain, the faster items drain"],
+    reward: "Toxic Rain Island Topper",
+    n: 10,
+  },
+  defuser: {
+    name: "Defuser",
+    rules: ["Every enemy team's bed needs to be defused before being able to break it", "Once you defuse an enemy's bed defence, it will stay defused for 2 minutes"],
+    reward: "Defuser Shopkeeper Skin",
+    n: 11,
+  },
+  mining_fatigue: {
+    name: "Lazy Miner",
+    rules: ["You gain permanent Mining Fatigue throughout the game", "If you activate a Mining Fatigue Trap, you receive a greater Mining Fatigue effect"],
+    reward: "Lazy Miner Island Topper",
+    n: 12,
+  },
+  no_healing: { name: "Ultimate UHC", rules: ["Natural health regeneration is disabled", "Golden Apples do not provide health"], reward: "Heartbleed Island Topper", n: 13 },
+  hotbar: { name: "Sleight of Hand", rules: ["You only have 1 available hotbar slot to use"], reward: "Magic Bunny Island Topper", n: 14 },
+  weighted_items: { name: "Weighted Items", rules: ["Each item has a unique weight to them", "Carrying heavy items will make you move slower"], reward: "Anvil Smash Final Kill Effect", n: 15 },
+  knockback_stick_only: { name: "Social Distancing", rules: ["You can only use Knockback Sticks and Punch Bows to attack players"], reward: "Social Distancing Kill Messages", n: 16 },
+  no_swords: {
+    name: "Swordless",
+    rules: ["You cannot purchase any swords from the shop", "You cannot pick up any swords", "Using axes or pickaxes will only deal 1 damage to players"],
+    reward: "The End Projectile Trail",
+    n: 17,
+  },
+  archer_only: {
+    name: "Marksman",
+    rules: ["You cannot hit any players with melee weapons, including your fist", "2: You can only attack players using a bow"],
+    reward: "Ballista Island Topper",
+    n: 18,
+  },
+  patriot: {
+    name: "Patriot",
+    rules: [
+      "You can only walk on blocks your team has placed",
+      "You cannot pick up any items from enemy players",
+      "You do not receive any items from killing a player",
+      "You can only pick up resources from your own generator",
+      "If you walk on blocks placed by an enemy team, the challenge will be failed",
+    ],
+    reward: "Patriotic Eagle Shopkeeper Skin",
+    n: 19,
+  },
+  stamina: {
+    name: "Stamina",
+    rules: [
+      "Any action in the game such as running or breaking blocks consumes stamina",
+      "If you don't have enough stamina, you won't be able to sprint or break blocks",
+      "Your stamina is represented by your hunger bar",
+      "Golden Apples double your stamina recharge rate for 10 seconds",
+    ],
+    reward: "Cake Walk Victory Dance",
+    n: 20,
+  },
+  no_sprint: { name: "Old Man", rules: ["You cannot sprint during the whole game", "If you sprint, the challenge will be failed"], reward: "Old Man Kill Messages", n: 21 },
+  capped_resources: {
+    name: "Capped Resources",
+    rules: ["All shop items have a limited purchase cap for your entire team", "You cannot pick up any items from enemy players", "You can only pick up resources from your own generator"],
+    reward: "Merchant Shopkeeper Skin",
+    n: 22,
+  },
+  stop_light: {
+    name: "Red Light, Green Light",
+    rules: ["At random intervals the stop light will switch between red and green", "If you move when the light is red, you fail the challenge"],
+    reward: "Traffic Light Island Topper",
+    n: 23,
+  },
+  delayed_hitting: { name: "Slow Reflexes", rules: ["You can only hit enemies once every 2 seconds"], reward: "Guardian Death Cry", n: 24 },
+  no_hitting: {
+    name: "Pacifist",
+    rules: ["You cannot hit any players with melee weapons, including your fist", "You cannot use any bows to deal damage", "You can only use Utilities to deal damage"],
+    reward: "Aura Victory Dance",
+    n: 25,
+  },
+  master_assassin: {
+    name: "Master Assassin",
+    rules: [
+      "You can only break the bed of your assigned target",
+      "You can only damage players of your target team",
+      "No other beds can be broken until you eliminate your target's entire team",
+      "After successfully eliminating your target team, a new target will be assigned",
+    ],
+    reward: "Assassin's Blade Island Topper",
+    n: 26,
+  },
+  no_shift: { name: "Standing Tall", rules: ["You cannot sneak during the challenge", "If you crouch, the challenge will be failed"], reward: "Portal Projectile Trail", n: 27 },
+  protect_the_president: {
+    name: "Protect the President",
+    rules: ["One player on the team is selected as the president", "Only the president has the authority to break enemy beds", "If the president dies, you fail the challenge"],
+    reward: "Presidential Goons Island Topper & President Sloth Shopkeeper",
+    n: 28,
+  },
+  cant_touch_this: {
+    name: "Can't Touch This",
+    rules: [
+      "You must not take any damage for the whole game",
+      "If you take any damage or fall into the void, the challenge will be failed",
+      "Your team must break at least one bed to complete the challenge",
+    ],
+    reward: "Elder Guardian Victory Dance, Guardian Rocket Final Kill Effect, & Fire Spiral Projectile Trail",
+    n: 29,
+  },
+};
