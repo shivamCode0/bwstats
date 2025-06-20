@@ -1,12 +1,11 @@
-'use client';
+"use client";
 
-import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation';
-import { Container, Row, Col, Table, Card, Alert, Spinner, Badge, Button } from 'react-bootstrap';
-import { BWStatsData } from '@/types';
-import { FRIENDLY_MODE_NAMES, FRIENDLY_EXTRA_MODE_NAMES, FRIENDLY_STAT_NAMES, CHALLENGES } from '@/lib/constants';
-import { generateSummary } from '@/lib/utils';
-import Navigation from '@/components/Navigation';
+import React, { useState, useEffect } from "react";
+import { useParams } from "next/navigation";
+import { Table, Alert, Accordion } from "react-bootstrap";
+import { BWStatsData } from "@/types";
+import { FRIENDLY_MODE_NAMES, FRIENDLY_EXTRA_MODE_NAMES, FRIENDLY_STAT_NAMES, CHALLENGES } from "@/lib/constants";
+import { generateSummary } from "@/lib/utils";
 
 export default function UserPage() {
   const params = useParams();
@@ -21,197 +20,311 @@ export default function UserPage() {
     }
   }, [username]);
 
+  useEffect(() => {
+    // Set random background image on client side
+    if (data && data.success) {
+      const randomBgIndex = Math.floor(Math.random() * 14) + 1;
+      document.body.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url("/bgimg/${randomBgIndex}.jpeg")`;
+      document.body.style.backgroundPosition = "center";
+      document.body.style.backgroundRepeat = "no-repeat";
+      document.body.style.backgroundSize = "cover";
+      document.body.style.backdropFilter = "blur(3px)";
+      document.body.style.backgroundAttachment = "fixed";
+      document.body.style.backgroundColor = "rgb(230, 230, 230)";
+
+      // Initialize tooltips
+      import("bootstrap/dist/js/bootstrap.bundle.min.js").then((bootstrap) => {
+        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+        tooltipTriggerList.map(function (tooltipTriggerEl) {
+          return new bootstrap.Tooltip(tooltipTriggerEl);
+        });
+      });
+    }
+
+    return () => {
+      // Clean up background styles when component unmounts
+      document.body.style.backgroundImage = "";
+      document.body.style.backgroundPosition = "";
+      document.body.style.backgroundRepeat = "";
+      document.body.style.backgroundSize = "";
+      document.body.style.backdropFilter = "";
+      document.body.style.backgroundAttachment = "";
+      document.body.style.backgroundColor = "";
+    };
+  }, [data]);
+
   const fetchUserData = async (username: string) => {
     try {
       setLoading(true);
       setError(null);
-      
+
       const response = await fetch(`/api/user/${encodeURIComponent(username)}`);
       const result = await response.json();
-      
+
       if (!response.ok) {
-        throw new Error(result.error || 'Failed to fetch user data');
+        throw new Error(result.error || "Failed to fetch user data");
       }
-      
+
       setData(result);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'An error occurred');
+      setError(err instanceof Error ? err.message : "An error occurred");
     } finally {
       setLoading(false);
     }
   };
 
-  if (loading) {
-    return (
-      <Container className="py-5 text-center">
-        <Spinner animation="border" role="status" variant="primary" className="mb-3" />
-        <p>Loading player data...</p>
-      </Container>
-    );
-  }
-
-  if (error) {
-    return (
-      <Container className="py-5">
-        <Alert variant="danger">
-          <Alert.Heading>Error</Alert.Heading>
-          <p>{error}</p>
-          <Button variant="outline-danger" onClick={() => fetchUserData(username)}>
-            Try Again
-          </Button>
-        </Alert>
-      </Container>
-    );
-  }
-
-  if (!data) {
-    return (
-      <Container className="py-5">
-        <Alert variant="warning">No data available</Alert>
-      </Container>
-    );
-  }
-  const backgroundImageIndex = Math.floor(Math.random() * 14) + 1;
   const allModesExceptOverall = { ...FRIENDLY_MODE_NAMES, ...FRIENDLY_EXTRA_MODE_NAMES };
-  
-  const mostPlayedMode = Object.entries(data.stats.modes)
-    .filter(([mode]) => mode !== 'total')
-    .sort((a, b) => b[1].gamesPlayed - a[1].gamesPlayed)[0]?.[0];
-  
-  const mostPlayedModeName = mostPlayedMode 
-    ? (allModesExceptOverall as Record<string, string>)[mostPlayedMode] || mostPlayedMode 
-    : 'Unknown';
+
+  const mostPlayedMode =
+    data && data.success
+      ? Object.entries(data.stats.modes)
+          .filter(([mode]) => mode !== "total")
+          .sort((a, b) => b[1].gamesPlayed - a[1].gamesPlayed)[0]?.[0]
+      : undefined;
+
+  const mostPlayedModeName = mostPlayedMode ? (allModesExceptOverall as Record<string, string>)[mostPlayedMode] || mostPlayedMode : "Unknown";
+
+  const summary = data && data.success ? generateSummary(data) : "";
+
+  const formatTitle = (challenge: { n: number; name: string; rules: string[]; reward: string }) => {
+    return `<b>Challenge ${challenge.n + 1} - ${challenge.name}</b><br />${challenge.rules.map((r, i) => `${i + 1}. ${r}`).join("<br />")}<br /><span>Reward: ${challenge.reward}</span>`;
+  };
+
+  const timeFormatted = data?.time ? new Date(data.time).toLocaleTimeString() : "";
   return (
     <>
-      <Navigation />
-      <div 
-        className="background-image"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url(/bgimg/${backgroundImageIndex}.jpeg)`
-        }}
-      >
-      <Container fluid className="py-4">
-        <div className="main-content">
-          {/* Left sidebar */}
-          <div className="leftbar me-3">
-            <Card className="stats-container">
-              <Card.Body className="text-center">
-                <div className="player-img-box">
-                  <img 
-                    src={`https://crafatar.com/renders/body/${data.uuid}?size=200&overlay=true`}
-                    alt={`${data.username}'s skin`}
-                    className="img-fluid"
+      <style jsx global>{`
+        body {
+          // background-image: linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)),
+          //   url("https://cdn.shivam.pro/app-static-data/images/bw-bg-compressed/<%- Math.floor(Math.random() * 14) + 1 %>.jpeg");
+          background-position: center;
+          background-repeat: no-repeat;
+          background-size: cover;
+          backdrop-filter: blur(3px);
+          background-attachment: fixed;
+        }
+
+        .stats-container {
+          backdrop-filter: blur(8px);
+          background-color: rgba(255, 255, 255, 0.7);
+        }
+
+        .stats-table {
+          border-color: #2125296f;
+        }
+
+        .challenge {
+          margin-bottom: 0.25rem;
+          width: max-content;
+        }
+
+        .challenge::after {
+          content: "ⓘ";
+          color: #3d8fb8;
+          margin-left: 0.25rem;
+        }
+
+        .challenges-list {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: space-around;
+        }
+      `}</style>
+      <div className={`stats-container mt-lg-4 mb-lg-5 container-lg pt-1 mb-0 ${data?.success ? "pb-5" : "pb-2"}`}>
+        {data?.success ? (
+          <main className="main px-4">
+            <h1 className="text-center my-3">
+              <img src={`https://crafatar.com/avatars/${data.uuid}?overlay=true&size=16`} alt="Player Icon" style={{ height: "3rem", imageRendering: "pixelated" }} height="48" width="48" />{" "}
+              {data.username}&apos;s Bedwars Stats
+            </h1>
+            <div className="main-content">
+              <div className="leftbar pe-2" style={{ flex: 2 }}>
+                <div className="player-img-box me-4 w-100">
+                  <img
+                    src={`https://crafatar.com/renders/body/${data.uuid}?overlay&scale=10`}
+                    alt="Player Skin"
+                    className="player-img"
+                    onError={(e) => {
+                      const target = e.target as HTMLImageElement;
+                      const src1 = `https://mc-heads.net/body/${data.uuid}/right`;
+                      if (target.src !== src1) {
+                        target.src = src1;
+                      }
+                    }}
                   />
                 </div>
-                <h4 className="mb-2">{data.username}</h4>
-                <Badge bg="primary" className="mb-2 fs-6">
-                  {data.stats.levelFormatted}
-                </Badge>
-                <p className="text-muted small mb-2">
-                  Most played: {mostPlayedModeName}
-                </p>
-                <p className="text-muted small">
-                  {generateSummary(data)}
-                </p>
-                {data.cached && (
-                  <Badge bg="secondary" className="mt-2">
-                    Cached Data
-                  </Badge>
-                )}
-              </Card.Body>
-            </Card>
-          </div>
-
-          {/* Main content */}
-          <div className="flex-grow-1">
-            <Card className="stats-container">
-              <Card.Header>
-                <h3 className="mb-0">Bedwars Statistics</h3>
-                <small className="text-muted">
-                  Data from {new Date(data.time).toLocaleString()}
-                </small>
-              </Card.Header>
-              <Card.Body className="p-0">
+                <Alert variant="info" className="no-mobile">
+                  Tip! Share your <Alert.Link href={`https://bwstats.shivam.pro/user/${data.username}`}>stats link</Alert.Link> with your friends and show them how amazing you are.
+                </Alert>
+              </div>
+              <div style={{ width: "100%", flex: 6 }}>
+                <p>Level: {data.stats.levelFormatted}</p>
+                <p>Coins: {data.stats.coinsFormatted}</p>
+                <p>Final Kills/Deaths Ratio (FKDR): {data.stats.modes.total.fkdr}</p>
+                <p>Beds Broken/Lost Ratio (BBLR): {data.stats.modes.total.bblr}</p>
                 <div className="stats-table-container">
-                  {/* Overall Stats */}
-                  <div className="p-3 border-bottom">
-                    <h5 className="mb-3">Overall Statistics</h5>
-                    <Row className="g-3">
-                      <Col md={6}>
-                        <p><strong>Level:</strong> {data.stats.levelFormatted}</p>
-                        <p><strong>Coins:</strong> {data.stats.coinsFormatted}</p>
-                      </Col>
-                      <Col md={6}>
-                        <p><strong>Games Played:</strong> {data.stats.modes.total?.gamesPlayed.toLocaleString() || 0}</p>
-                        <p><strong>Wins:</strong> {data.stats.modes.total?.wins.toLocaleString() || 0}</p>
-                      </Col>
-                    </Row>
-                  </div>
-
-                  {/* Mode Statistics */}
-                  {Object.entries(allModesExceptOverall).map(([modeKey, modeName]) => {
-                    const modeStats = data.stats.modes[modeKey];
-                    if (!modeStats || modeStats.gamesPlayed === 0) return null;
-
-                    return (
-                      <div key={modeKey} className="p-3 border-bottom">
-                        <h6 className="mb-3">{modeName}</h6>
-                        <Table responsive size="sm" className="stats-table">
-                          <tbody>
-                            {FRIENDLY_STAT_NAMES.map((statGroup, groupIndex) => (
-                              <tr key={groupIndex}>
-                                {Object.entries(statGroup).map(([statKey, statName]) => (
-                                  <td key={statKey} className="text-center">
-                                    <strong>{statName}</strong><br />
-                                    {typeof modeStats[statKey as keyof typeof modeStats] === 'number' 
-                                      ? (modeStats[statKey as keyof typeof modeStats] as number).toLocaleString()
-                                      : modeStats[statKey as keyof typeof modeStats]
-                                    }
-                                  </td>
-                                ))}
-                              </tr>
-                            ))}
-                          </tbody>
-                        </Table>
-                      </div>
-                    );
-                  })}
-
-                  {/* Challenges */}
-                  {data.stats.challenges.length > 0 && (
-                    <div className="p-3">
-                      <h6 className="mb-3">Completed Challenges</h6>
-                      <Row className="g-2">
-                        {data.stats.challenges.map((challengeKey) => {
-                          const challenge = CHALLENGES[challengeKey as keyof typeof CHALLENGES];
-                          if (!challenge) return null;
-                          
-                          return (
-                            <Col key={challengeKey} md={6} lg={4}>
-                              <Card className="h-100">
-                                <Card.Body className="p-2">
-                                  <h6 className="card-title mb-1">{challenge.name}</h6>
-                                  <p className="card-text small text-muted mb-1">
-                                    Reward: {challenge.reward}
-                                  </p>
-                                  <ul className="small mb-0">
-                                    {challenge.rules.map((rule, index) => (
-                                      <li key={index}>{rule}</li>
-                                    ))}
-                                  </ul>
-                                </Card.Body>
-                              </Card>
-                            </Col>
-                          );
-                        })}
-                      </Row>
-                    </div>
-                  )}
+                  <Table className="stats-table">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        {Object.entries(FRIENDLY_MODE_NAMES).map(([key, name]) => (
+                          <th key={key}>{name}</th>
+                        ))}
+                      </tr>
+                    </thead>
+                    <tbody className="mb-2">
+                      {FRIENDLY_STAT_NAMES.map((statGroup, groupIndex) => (
+                        <React.Fragment key={groupIndex}>
+                          {Object.entries(statGroup).map(([statKey, statName]) => (
+                            <tr key={statKey}>
+                              <td>{statName}</td>
+                              {Object.keys(FRIENDLY_MODE_NAMES).map((modeKey) => (
+                                <td key={modeKey}>{(data.stats.modes[modeKey] as any)?.[statKey]?.toLocaleString() || "0"}</td>
+                              ))}
+                            </tr>
+                          ))}
+                          <tr>
+                            <td colSpan={Object.keys(FRIENDLY_MODE_NAMES).length + 1} className="divider"></td>
+                          </tr>
+                        </React.Fragment>
+                      ))}
+                    </tbody>
+                  </Table>
                 </div>
-              </Card.Body>
-            </Card>
-          </div>        </div>
-      </Container>
+              </div>
+            </div>
+            <div>
+              <Accordion>
+                {/* Other Modes */}
+                <Accordion.Item eventKey="0">
+                  <Accordion.Header>Other Modes</Accordion.Header>
+                  <Accordion.Body>
+                    <div className="stats-table-container">
+                      <Table className="stats-table mb-0">
+                        <thead>
+                          <tr>
+                            <th></th>
+                            {Object.entries(FRIENDLY_EXTRA_MODE_NAMES).map(([key, name]) => (
+                              <th key={key}>{name}</th>
+                            ))}
+                          </tr>
+                        </thead>
+                        <tbody className="mb-2">
+                          {FRIENDLY_STAT_NAMES.map((statGroup, groupIndex) => (
+                            <React.Fragment key={groupIndex}>
+                              {Object.entries(statGroup).map(([statKey, statName]) => (
+                                <tr key={statKey}>
+                                  <td>{statName}</td>
+                                  {Object.keys(FRIENDLY_EXTRA_MODE_NAMES).map((modeKey) => (
+                                    <td key={modeKey}>{(data.stats.modes[modeKey] as any)?.[statKey]?.toLocaleString() || "Error"}</td>
+                                  ))}
+                                </tr>
+                              ))}
+                              <tr>
+                                <td colSpan={Object.keys(FRIENDLY_EXTRA_MODE_NAMES).length + 1} className="divider"></td>
+                              </tr>
+                            </React.Fragment>
+                          ))}
+                        </tbody>
+                      </Table>
+                    </div>
+                  </Accordion.Body>
+                </Accordion.Item>
+                {/* Summary */}
+                <Accordion.Item eventKey="1">
+                  <Accordion.Header>Summary</Accordion.Header>
+                  <Accordion.Body>
+                    <p>{summary}</p>
+                  </Accordion.Body>
+                </Accordion.Item>
+                {/* Challenges */}
+                <Accordion.Item eventKey="2">
+                  <Accordion.Header>Challenges</Accordion.Header>
+                  <Accordion.Body>
+                    <div className="challenges-list">
+                      {data.stats.challenges && data.stats.challenges.length > 0 && (
+                        <div>
+                          <h3>Completed</h3>
+                          {data.stats.challenges
+                            .sort((a: string, b: string) => (CHALLENGES as any)[a]?.n - (CHALLENGES as any)[b]?.n)
+                            .map((challengeKey: string) => {
+                              const challenge = (CHALLENGES as any)[challengeKey];
+                              return challenge ? (
+                                <p
+                                  key={challengeKey}
+                                  className="challenge"
+                                  data-bs-toggle="tooltip"
+                                  data-bs-html="true"
+                                  data-bs-placement="right"
+                                  title={formatTitle(challenge)}
+                                  dangerouslySetInnerHTML={{ __html: `${challenge.n + 1}. ${challenge.name}` }}
+                                ></p>
+                              ) : null;
+                            })}
+                        </div>
+                      )}
+                      {(!data.stats.challenges || data.stats.challenges.length < Object.keys(CHALLENGES).length) && (
+                        <div>
+                          <h3>Not Completed</h3>
+                          {Object.entries(CHALLENGES)
+                            .filter(([key]) => !data.stats.challenges?.includes(key))
+                            .sort(([, a], [, b]) => a.n - b.n)
+                            .map(([key, challenge]) => (
+                              <p
+                                key={key}
+                                className="challenge"
+                                data-bs-toggle="tooltip"
+                                data-bs-html="true"
+                                data-bs-placement="right"
+                                title={formatTitle(challenge)}
+                                dangerouslySetInnerHTML={{ __html: `${challenge.n + 1}. ${challenge.name}` }}
+                              ></p>
+                            ))}
+                        </div>
+                      )}
+                    </div>
+                  </Accordion.Body>
+                </Accordion.Item>
+              </Accordion>
+            </div>
+            <div className="mt-3">
+              <p className="text-center">
+                {data.cached ? "Cached result" : "Result"} from{" "}
+                <time className="change-time" dateTime={data.time ? new Date(data.time).toISOString() : ""}>
+                  {timeFormatted}
+                </time>
+              </p>
+            </div>
+          </main>
+        ) : (
+          <>
+            {loading ? (
+              <>
+                <h1 className="text-center my-4">Loading...</h1>
+                <p className="text-center">Please wait while we fetch the player data.</p>
+              </>
+            ) : error ? (
+              error.length > 50 ? (
+                <>
+                  <h1 className="text-center my-4">Error</h1>
+                  <p className="text-center">Please try again in 1 minute.</p>
+                  <p className="text-left my-4">
+                    {error.split("\n").map((line, index) => (
+                      <React.Fragment key={index}>
+                        {line}
+                        <br />
+                      </React.Fragment>
+                    ))}
+                  </p>
+                </>
+              ) : (
+                <h1 className="text-center my-4">{error}</h1>
+              )
+            ) : (
+              <h1 className="text-center my-4">Unknown Error</h1>
+            )}
+          </>
+        )}
       </div>
     </>
   );

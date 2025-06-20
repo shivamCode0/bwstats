@@ -1,5 +1,5 @@
 import axios from "axios";
-import connectDB from "./db";
+import "./db";
 import UserQuery from "@/models/UserQuery";
 import { PlayerUser, BWStatsData } from "@/types";
 
@@ -180,8 +180,6 @@ export async function getStats({ uuid, username }: PlayerUser): Promise<BWStatsD
 }
 
 export async function getStatsCached(user: PlayerUser, { ip = "unknown" }: { ip?: string } = {}): Promise<BWStatsData> {
-  await connectDB();
-
   try {
     // Check for cached data within the last 5 minutes
     const cacheTime = process.env.NODE_ENV === "development" ? 2 : 5; // minutes

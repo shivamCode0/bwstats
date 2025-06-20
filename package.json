@@ -12,12 +12,17 @@
     "@types/mongoose": "^5.11.97",
     "axios": "^1.10.0",
     "bootstrap": "^5.3.7",
+    "clsx": "^2.1.1",
+    "mongodb-memory-server": "^10.1.4",
     "mongoose": "^8.16.0",
     "next": "15.3.4",
     "react": "^19.0.0",
     "react-bootstrap": "^2.10.10",
     "react-dom": "^19.0.0",
-    "react-use": "^17.6.0"
+    "react-use": "^17.6.0",
+    "sass": "^1.89.2",
+    "sass-embedded": "^1.89.2",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "typescript": "^5",

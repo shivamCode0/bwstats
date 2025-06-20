@@ -1,119 +1,81 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Container, Row, Col, Form, Button, Card } from 'react-bootstrap';
-import Navigation from '@/components/Navigation';
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { Navbar, Nav, Container, Form, Button, InputGroup } from "react-bootstrap";
 
 export default function Home() {
-  const [username, setUsername] = useState('');
+  const [username, setUsername] = useState("");
   const router = useRouter();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (username.trim()) {
       router.push(`/user/${encodeURIComponent(username.trim())}`);
+    } else {
+      alert("Enter your username to see your stats.");
     }
   };
 
-  const backgroundImageIndex = Math.floor(Math.random() * 14) + 1;
-
   return (
     <>
-      <Navigation />
-      <div 
-        className="background-image"
-        style={{
-          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url(/bgimg/${backgroundImageIndex}.jpeg)`
-        }}
-      >
       <div className="hero-image">
         <div className="hero-text">
-          <h1 className="display-4 fw-bold mb-4">Hypixel Bedwars Stats</h1>
-          <p className="lead mb-4">Track your Bedwars statistics and view leaderboards</p>
-          
-          <Form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
-            <Form.Group>
+          <h1>Bedwars Stats</h1>
+          <label htmlFor="input-mcusername" className="h5 mb-3">
+            Enter your username to see your stats.
+          </label>
+          <Form onSubmit={handleSubmit}>
+            <InputGroup className="mb-3">
               <Form.Control
+                name="user"
                 type="text"
-                placeholder="Enter your Minecraft username"
+                placeholder="Minecraft Username"
+                id="input-mcusername"
+                required
                 value={username}
-                onChange={(e) => setUsername(e.target.value)}
+                onChange={(e) => setUsername(e.target.value.replace(/\s/g, ""))}
                 size="lg"
-                className="text-center"
-                style={{ fontSize: '1.1rem' }}
               />
-            </Form.Group>
-            <Button 
-              variant="primary" 
-              type="submit" 
-              size="lg"
-              disabled={!username.trim()}
-              className="fw-bold"
-            >
-              View Stats
-            </Button>
+              <Button variant="primary" type="submit" size="lg">
+                View Stats
+              </Button>
+            </InputGroup>
           </Form>
         </div>
       </div>
 
-      <Container className="py-5">
-        <Row className="justify-content-center">
-          <Col lg={10}>
-            <Row className="g-4">
-              <Col md={4}>
-                <Card className="h-100 text-center">
-                  <Card.Body>
-                    <Card.Title>Player Stats</Card.Title>
-                    <Card.Text>
-                      View detailed Bedwars statistics including kills, deaths, wins, losses, and more across all game modes.
-                    </Card.Text>
-                    <Button variant="outline-primary" href="/user/dream">
-                      View Example
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col md={4}>
-                <Card className="h-100 text-center">
-                  <Card.Body>
-                    <Card.Title>Leaderboards</Card.Title>
-                    <Card.Text>
-                      Check out the top players in Bedwars by level, wins, and final kills.
-                    </Card.Text>
-                    <Button variant="outline-primary" href="/leaderboards">
-                      View Leaderboards
-                    </Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-              <Col md={4}>
-                <Card className="h-100 text-center">
-                  <Card.Body>
-                    <Card.Title>Fast & Cached</Card.Title>
-                    <Card.Text>
-                      Data is cached for 5 minutes to ensure fast loading times and reduce API calls.
-                    </Card.Text>
-                  </Card.Body>
-                </Card>
-              </Col>
-            </Row>
-          </Col>
-        </Row>
+      <Container className="mt-3">
+        <h2 className="text-center">Hypixel Bedwars Stats</h2>
+        <p>
+          Welcome to bwstats.shivam.pro! You can find statistics for Bedwars players on Hypixel on this website. Tip: You should check your stats and share the link with your friends to show how
+          amazing you are.
+        </p>
+        <hr />
+        <h3>How to Use</h3>
+        <p>This website, bwstats.shivam.pro, is very easy to use. Type in the username of the player you want to see data for. Then, press the blue &quot;View Stats&quot; button to see the stats.</p>
+        <h3>Additional Information</h3>
+        <p>
+          You can see player and game data and Hypixel stats for Bedwars on this website. This is a tracker for a player&apos;s stats in Bedwars (BW) and is also a stat checker. You could add your
+          stats link to your Hypixel forum signature and share it with your friends. We are currently developing a leaderboard for bedwars and more cool things. See your total bedwars stats in hypixel
+          and this is how you check stats. We appreciate you visiting!
+        </p>
+        <h3>API Information</h3>
+        <p>
+          <strong>Note: The API is being reworked because of API access restrictions.</strong> The API returns nicely-formatted JSON of a player&apos;s stats.
+          <br />
+          <code>GET</code>
+          https://bwstats.shivam.pro/api-v1/user/<code>{`{user}`}</code>?key=<code>{`{apikey}`}</code>
+        </p>
+        <ul>
+          <li>
+            <code>{`{user}`}</code> - Player (username or uuid)
+          </li>
+          <li>
+            <code>{`{apikey}`}</code> - Your Hypixel API key (This is necessary to use the API.)
+          </li>
+        </ul>
       </Container>
-
-      <footer className="footer bg-dark text-light py-3">
-        <Container>
-          <Row>
-            <Col className="text-center">
-              <p className="mb-0">
-                &copy; 2025 Hypixel Bedwars Stats. Not affiliated with Hypixel or Mojang.
-              </p>
-            </Col>
-          </Row>
-        </Container>
-      </footer>
-      </div>
     </>
   );
 }

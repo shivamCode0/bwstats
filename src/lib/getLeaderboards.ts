@@ -1,5 +1,5 @@
 import axios from "axios";
-import connectDB from "./db";
+import "./db";
 import LBQuery from "@/models/LBQuery";
 import { BWLeaderboardsData } from "@/types";
 import { getUser } from "./getUser";
@@ -104,8 +104,6 @@ export async function getLeaderboards(): Promise<BWLeaderboardsData> {
 }
 
 export async function getLeaderboardsCached({ ip = "unknown" }: { ip?: string } = {}): Promise<BWLeaderboardsData> {
-  await connectDB();
-
   try {
     // Check for cached data within the last 4 hours
     const cacheTime = 4; // hours

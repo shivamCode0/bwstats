@@ -1,48 +1,21 @@
 import mongoose from "mongoose";
+import { MongoMemoryServer } from "mongodb-memory-server";
 
-const MONGODB_URI = process.env.MONGODB_URI;
-
-if (!MONGODB_URI) {
-  throw new Error("Please define the MONGODB_URI environment variable");
-}
-
-type CachedMongoose = {
-  conn: typeof mongoose | null;
-  promise: Promise<typeof mongoose> | null;
+const isDev = () => {
+  return process.env.NODE_ENV === "development" || process.env.FUNCTIONS_EMULATOR;
 };
 
-declare global {
-  var mongoose: CachedMongoose | undefined;
+if (!isDev()) {
+  mongoose.connect(`mongodb+srv://bwstats-user:${process.env.MONGODB_PWD}@shivam-test1.lwr9z.mongodb.net/bwstats?retryWrites=true&w=majority`, { maxPoolSize: 2 }).then(() => {
+    console.log("Connected to MongoDB");
+  });
+} else {
+  (async () => {
+    const mongoServer = await MongoMemoryServer.create();
+    mongoose.connect(mongoServer.getUri(), { maxPoolSize: 2 }).then(() => {
+      console.log("Connected to MOCK MongoDB - NOT REAL DB! JUST FOR TESTING");
+    });
+  })();
 }
 
-const cached: CachedMongoose = global.mongoose || { conn: null, promise: null };
-
-if (!global.mongoose) {
-  global.mongoose = cached;
-}
-
-async function connectDB() {
-  if (cached.conn) {
-    return cached.conn;
-  }
-
-  if (!cached.promise) {
-    const opts = {
-      bufferCommands: false,
-      maxPoolSize: 2,
-    };
-
-    cached.promise = mongoose.connect(MONGODB_URI!, opts);
-  }
-
-  try {
-    cached.conn = await cached.promise;
-  } catch (e) {
-    cached.promise = null;
-    throw e;
-  }
-
-  return cached.conn;
-}
-
-export default connectDB;
+export default mongoose;

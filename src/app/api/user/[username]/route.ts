@@ -5,7 +5,7 @@ import { getClientIP } from "@/lib/utils";
 
 export async function GET(request: NextRequest, { params }: { params: { username: string } }) {
   try {
-    const { username } = params;
+    const { username } = await params;
 
     if (!username) {
       return NextResponse.json({ error: "Username is required" }, { status: 400 });
