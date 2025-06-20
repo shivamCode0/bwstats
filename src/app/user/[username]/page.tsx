@@ -22,24 +22,23 @@ export default function UserPage() {
 
   useEffect(() => {
     // Set random background image on client side
-    if (data && data.success) {
-      const randomBgIndex = Math.floor(Math.random() * 14) + 1;
-      document.body.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url("/bgimg/${randomBgIndex}.jpeg")`;
-      document.body.style.backgroundPosition = "center";
-      document.body.style.backgroundRepeat = "no-repeat";
-      document.body.style.backgroundSize = "cover";
-      document.body.style.backdropFilter = "blur(3px)";
-      document.body.style.backgroundAttachment = "fixed";
-      document.body.style.backgroundColor = "rgb(230, 230, 230)";
 
-      // Initialize tooltips
-      import("bootstrap/dist/js/bootstrap.bundle.min.js").then((bootstrap) => {
-        const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
-        tooltipTriggerList.map(function (tooltipTriggerEl) {
-          return new bootstrap.Tooltip(tooltipTriggerEl);
-        });
+    const randomBgIndex = Math.floor(Math.random() * 14) + 1;
+    document.body.style.backgroundImage = `linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url("/bgimg/${randomBgIndex}.jpeg")`;
+    document.body.style.backgroundPosition = "center";
+    document.body.style.backgroundRepeat = "no-repeat";
+    document.body.style.backgroundSize = "cover";
+    document.body.style.backdropFilter = "blur(3px)";
+    document.body.style.backgroundAttachment = "fixed";
+    document.body.style.backgroundColor = "rgb(230, 230, 230)";
+
+    // Initialize tooltips
+    import("bootstrap/dist/js/bootstrap.bundle.min.js").then((bootstrap) => {
+      const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
       });
-    }
+    });
 
     return () => {
       // Clean up background styles when component unmounts
@@ -51,7 +50,7 @@ export default function UserPage() {
       document.body.style.backgroundAttachment = "";
       document.body.style.backgroundColor = "";
     };
-  }, [data]);
+  }, []);
 
   const fetchUserData = async (username: string) => {
     try {
