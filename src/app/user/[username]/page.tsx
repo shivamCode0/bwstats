@@ -157,15 +157,12 @@ async function UserContent({ username }: { username: string }) {
         <div className="leftbar space-y-3 hidden md:block md:w-[220px] lg:w-[250px] xl:w-[300px]">
           <Card className="bg-white/75 backdrop-blur-sm">
             <CardHeader className="text-center">
-              <div className="">
+              <div className="flex justify-center">
                 <Suspense fallback={<div className="h-[430px] w-[200px] mx-auto bg-gray-200 animate-pulse rounded" />}>
                   <PlayerSkinView uuid={data.uuid} username={data.username} />
                 </Suspense>
               </div>
-              <CardTitle className="flex items-center justify-center gap-2">
-                <User className="w-5 h-5" />
-                {data.username}
-              </CardTitle>
+              <CardTitle className="flex items-center justify-center gap-2">{data.username}</CardTitle>
               <div className="space-y-2 mt-2">
                 <Badge variant="outline" className="text-sm">
                   Level {data.stats.level}

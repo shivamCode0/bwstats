@@ -3,6 +3,7 @@ import { connectDB } from "./db";
 import UserQuery from "@/models/UserQuery";
 import { PlayerUser, BWStatsData } from "@/types";
 import { FRIENDLY_EXTRA_MODE_NAMES, FRIENDLY_MODE_NAMES } from "./constants";
+import { redisCache } from "./redis";
 
 /**
  * Gets Hypixel Bedwars Stats
@@ -169,42 +170,40 @@ export async function getStats({ uuid, username }: PlayerUser): Promise<BWStatsD
 
 export async function getStatsCached(user: PlayerUser, { ip = "unknown" }: { ip?: string } = {}): Promise<BWStatsData> {
   try {
-    // In development, skip database caching for speed
-    if (process.env.NODE_ENV === "development") {
-      console.log(`[DEV] Fetching fresh data for ${user.username} (skipping DB cache)`);
-      return await getStats(user);
+    const cacheKey = `user:${user.uuid.toLowerCase()}`;
+
+    // Try Redis cache first
+    const cachedData = await redisCache.get<BWStatsData>(cacheKey);
+    if (cachedData) {
+      console.log(`Cache HIT for ${user.username} (Redis)`);
+      return { ...cachedData, cached: true };
     }
 
-    // Connect to database only in production
-    await connectDB();
-
-    // Check for cached data within the last 5 minutes (production only)
-    const cacheTime = 5; // minutes
-    const cutoffTime = new Date(Date.now() - cacheTime * 60 * 1000);
-
-    const cachedQuery = await UserQuery.findOne({
-      uuid: user.uuid.toLowerCase(),
-      time: { $gte: cutoffTime },
-      cached: false,
-    })
-      .sort({ time: -1 })
-      .limit(1);
-
-    if (cachedQuery) {
-      return { ...cachedQuery.data, cached: true };
-    }
+    console.log(`Cache MISS for ${user.username} - fetching fresh data`);
 
     // No cached data found, fetch fresh data
     const data = await getStats(user);
 
-    // Save to cache (don't await to avoid blocking the response)
-    UserQuery.create({
-      ip,
-      username: user.username,
-      uuid: user.uuid.toLowerCase(),
-      data,
-      cached: false,
-    }).catch(console.error);
+    // Cache in Redis with 5 minute TTL (don't await to avoid blocking the response)
+    redisCache.set(cacheKey, data, 300).catch((error) => {
+      console.error("Failed to cache user data in Redis:", error);
+    }); // Fallback: still save to MongoDB for backup/analytics (optional)
+    if (process.env.NODE_ENV !== "development") {
+      try {
+        await connectDB();
+        (UserQuery as any)
+          .create({
+            ip,
+            username: user.username,
+            uuid: user.uuid.toLowerCase(),
+            data,
+            cached: false,
+          })
+          .catch(console.error);
+      } catch (error) {
+        console.error("MongoDB fallback error:", error);
+      }
+    }
 
     return data;
   } catch (error) {

@@ -161,7 +161,7 @@ export default function LeaderboardsPage() {
 
             {/* Stats Overview Cards */}
             <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-              {LB_ORDER.map((lbKey) => {
+              {LB_ORDER.map((lbKey, i) => {
                 const isActive = activeTab === lbKey;
                 const totalPlayers = data.stats[lbKey]?.length || 0;
                 return (
@@ -199,11 +199,11 @@ export default function LeaderboardsPage() {
                       <div className="mb-8">
                         <h3 className="text-xl font-semibold mb-4 text-center">🏆 Top 3 Champions 🏆</h3>
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                          {data.stats[activeTab].slice(0, 3).map((entry, index) => {
-                            const rank = index + 1;
+                          {data.stats[activeTab].slice(0, 3).map((v, i) => {
+                            const rank = i + 1;
                             return (
                               <Card
-                                key={index}
+                                key={i}
                                 className={`relative overflow-hidden ${
                                   rank === 1
                                     ? "bg-gradient-to-br from-yellow-50 to-yellow-100 border-yellow-300"
@@ -216,8 +216,8 @@ export default function LeaderboardsPage() {
                                   <div className="absolute top-2 right-2">{getRankIcon(rank)}</div>
                                   <div className="mb-4">
                                     <Image
-                                      src={`https://crafatar.com/avatars/${entry.uuid}?size=64&overlay`}
-                                      alt={`${entry.username} avatar`}
+                                      src={`https://crafatar.com/avatars/${v.uuid}?size=64&overlay`}
+                                      alt={`${v.username} avatar`}
                                       width={64}
                                       height={64}
                                       className="mx-auto rounded-lg"
@@ -226,11 +226,15 @@ export default function LeaderboardsPage() {
                                   </div>
                                   <Badge className={`${getRankBadgeColor(rank)} mb-2 text-sm font-bold border-0`}>#{rank}</Badge>
                                   <h4 className={clsx("font-bold text-lg mb-2", minecraft.className)}>
-                                    <Link href={`/user/${entry.username}`} className={`hover:underline ${rank === 1 ? "text-yellow-700" : rank === 2 ? "text-gray-700" : "text-amber-700"}`}>
-                                      {entry.username}
+                                    <Link
+                                      prefetch={i < 5}
+                                      href={`/user/${v.username}`}
+                                      className={`hover:underline ${rank === 1 ? "text-yellow-700" : rank === 2 ? "text-gray-700" : "text-amber-700"}`}
+                                    >
+                                      {v.username}
                                     </Link>
                                   </h4>
-                                  <p className="text-2xl font-bold font-mono">{getStatValue(entry, activeTab)?.toLocaleString()}</p>
+                                  <p className="text-2xl font-bold font-mono">{getStatValue(v, activeTab)?.toLocaleString()}</p>
                                 </CardContent>
                               </Card>
                             );
@@ -240,15 +244,15 @@ export default function LeaderboardsPage() {
                     )}
 
                     {/* Full Rankings Table */}
-                    {chunk(data.stats[activeTab], 50).map((chunkData, chunkIndex) => (
-                      <div key={chunkIndex}>
-                        {chunkIndex > 0 && <div className="border-t border-gray-200 my-6"></div>}
+                    {chunk(data.stats[activeTab], 50).map((v, i) => (
+                      <div key={i}>
+                        {i > 0 && <div className="border-t border-gray-200 my-6"></div>}
                         <h3 className="text-lg font-semibold mb-4">
-                          Ranks {chunkIndex * 50 + 1} - {Math.min((chunkIndex + 1) * 50, data.stats[activeTab].length)}
+                          Ranks {i * 50 + 1} - {Math.min((i + 1) * 50, data.stats[activeTab].length)}
                         </h3>
                         <div className="grid gap-3">
-                          {chunkData.map((entry, entryIndex) => {
-                            const rank = chunkIndex * 50 + entryIndex + 1;
+                          {v.map((entry, entryIndex) => {
+                            const rank = i * 50 + entryIndex + 1;
                             const isTopTen = rank <= 10;
                             const isTopHundred = rank <= 100;
 

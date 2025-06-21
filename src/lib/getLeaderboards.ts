@@ -1,10 +1,11 @@
 import axios from "axios";
-import "./db";
+import { connectDB } from "./db";
 import LBQuery from "@/models/LBQuery";
 import { BWLeaderboardsData } from "@/types";
 import { getUser } from "./getUser";
 import { getStatsCached } from "./getStats";
 import React from "react";
+import { redisCache } from "./redis";
 
 export async function getLeaderboards(): Promise<BWLeaderboardsData> {
   const key = process.env.HYPIXEL_API_KEY;
@@ -105,26 +106,30 @@ export async function getLeaderboards(): Promise<BWLeaderboardsData> {
 
 export async function getLeaderboardsCached({ ip = "unknown" }: { ip?: string } = {}): Promise<BWLeaderboardsData> {
   try {
-    // Check for cached data within the last 4 hours
-    const cacheTime = 4; // hours
-    const cutoffTime = new Date(Date.now() - cacheTime * 60 * 60 * 1000);
+    const cacheKey = "leaderboards";
 
-    const cachedQuery = await LBQuery.findOne({
-      time: { $gte: cutoffTime },
-    })
-      .sort({ time: -1 })
-      .limit(1);
-
-    if (cachedQuery) {
-      return { ...cachedQuery.data, cached: true };
+    // Try Redis cache first
+    const cachedData = await redisCache.get<BWLeaderboardsData>(cacheKey);
+    if (cachedData) {
+      console.log("Cache HIT for leaderboards (Redis)");
+      return { ...cachedData, cached: true };
     }
 
+    console.log("Cache MISS for leaderboards - fetching fresh data");
+
     // No cached data found, fetch fresh data
-    console.log("Missed Cache - fetching fresh leaderboards");
     const data = await getLeaderboards();
 
-    // Save to cache (don't await to avoid blocking the response)
-    LBQuery.create({ ip, data }).catch(console.error);
+    // Cache in Redis with 4 hour TTL (don't await to avoid blocking the response)
+    redisCache.set(cacheKey, data, 14400).catch((error) => {
+      console.error("Failed to cache leaderboards in Redis:", error);
+    }); // Fallback: still save to MongoDB for backup/analytics (optional)
+    try {
+      await connectDB();
+      (LBQuery as any).create({ ip, data }).catch(console.error);
+    } catch (error) {
+      console.error("MongoDB fallback error:", error);
+    }
 
     return data;
   } catch (error) {

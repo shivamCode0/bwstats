@@ -13,7 +13,18 @@ export default function LeaderboardsPage() {
   const [backgroundImageIndex] = useState(() => Math.floor(Math.random() * 14) + 1);
 
   const getLeaderboardInfo = (lbKey: string) => {
-    const info = {
+    const info: {
+      [key: string]: {
+        icon: typeof Star;
+        color: string;
+        gradient: string;
+        bgGradient: string;
+        borderColor: string;
+        description: string;
+        metric: string;
+        estimated: string;
+      };
+    } = {
       bedwars_level: {
         icon: Star,
         color: "blue",
@@ -65,7 +76,7 @@ export default function LeaderboardsPage() {
         estimated: "50,000+",
       },
     };
-    return info[lbKey as keyof typeof info] || info.level;
+    return info[lbKey as keyof typeof info] || info["bedwars_level"];
   };
 
   return (
@@ -188,7 +199,7 @@ export default function LeaderboardsPage() {
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                   <div className="text-center">
-                    <div className="text-3xl font-bold text-blue-600 mb-1">8</div>
+                    <div className="text-3xl font-bold text-blue-600 mb-1">{Object.keys(FRIENDLY_LB_NAMES).length}</div>
                     <div className="text-sm text-gray-600">Categories</div>
                   </div>
                   <div className="text-center">

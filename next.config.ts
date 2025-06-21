@@ -1,5 +1,7 @@
 import type { NextConfig } from "next";
 
+const isDev = process.env.NODE_ENV === "development";
+
 const nextConfig: NextConfig = {
   /* config options here */
 
@@ -31,7 +33,7 @@ const nextConfig: NextConfig = {
   },
 
   experimental: {
-    ppr: true,
+    ppr: !isDev,
   },
   typescript: {
     ignoreBuildErrors: true, // This is not recommended for production, but useful for development

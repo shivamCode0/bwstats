@@ -9,7 +9,7 @@ export function UserPageSkeleton() {
     <div className="mx-auto py-8 px-4" style={{ maxWidth: "1300px" }}>
       <div className="main-content gap-3 lg:gap-4 xl:gap-5">
         {/* Left sidebar skeleton */}
-        <div className="leftbar space-y-3">
+        <div className="leftbar space-y-3 hidden md:block md:w-[220px] lg:w-[250px] xl:w-[300px]">
           <Card className="bg-white/75 backdrop-blur-sm">
             <CardHeader className="text-center">
               <div className="h-[430px] w-[200px] mx-auto bg-gray-200 animate-pulse rounded" />

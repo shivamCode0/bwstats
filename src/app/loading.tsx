@@ -1,10 +1,10 @@
-import { Spinner } from "react-bootstrap";
+import { Loader2 } from "lucide-react";
 
 export default function Loading() {
   return (
-    <div className="d-flex justify-content-center align-items-center" style={{ minHeight: "50vh" }}>
+    <div className="min-h-screen bg-gray-100 flex items-center justify-center">
       <div className="text-center">
-        <Spinner animation="border" role="status" variant="primary" className="mb-3" />
+        <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
         <p>Loading...</p>
       </div>
     </div>
