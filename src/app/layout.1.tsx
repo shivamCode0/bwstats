@@ -28,7 +28,7 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#b91d47" />
         <meta name="theme-color" content="#ffffff" />
       </head>
-      <body className="min-h-screen relative pb-24">
+      <body className={``} style={{ minHeight: "100vh", position: "relative", paddingBottom: "6rem" }}>
         <ModernNavigation />
         {children}
         <ModernFooter />

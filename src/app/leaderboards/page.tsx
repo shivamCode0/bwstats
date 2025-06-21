@@ -1,17 +1,21 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Container, Row, Col, Table, Card, Alert, Spinner, Badge, Nav } from "react-bootstrap";
 import { BWLeaderboardsData } from "@/types";
 import { FRIENDLY_LB_NAMES, LB_ORDER } from "@/lib/constants";
 import { chunk } from "@/lib/utils";
-import Navigation from "@/components/Navigation";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Loader2, Trophy, Medal, Award } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
 
 export default function LeaderboardsPage() {
   const [data, setData] = useState<BWLeaderboardsData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState("level");
+  const [backgroundImageIndex] = useState(() => Math.floor(Math.random() * 14) + 1);
 
   useEffect(() => {
     fetchLeaderboardData();
@@ -36,137 +40,154 @@ export default function LeaderboardsPage() {
       setLoading(false);
     }
   };
-  const [backgroundImageIndex] = useState(() => Math.floor(Math.random() * 14) + 1);
+
+  const getRankIcon = (rank: number) => {
+    if (rank === 1) return <Trophy className="w-4 h-4 text-yellow-500" />;
+    if (rank === 2) return <Medal className="w-4 h-4 text-gray-400" />;
+    if (rank === 3) return <Award className="w-4 h-4 text-amber-600" />;
+    return null;
+  };
+
+  const getStatValue = (entry: { username: string; [key: string]: string | number }, activeTab: string) => {
+    if (activeTab === "level") return entry.level;
+    if (activeTab === "totalWins") return entry.totalWins;
+    if (activeTab === "totalFinals") return entry.totalFinals;
+    // Add other mappings as needed based on your data structure
+    return entry[activeTab] || 0;
+  };
+
   if (loading) {
     return (
-      <Container className="py-5 text-center">
-        <Spinner animation="border" role="status" variant="primary" className="mb-3" />
-        <p>Loading leaderboards...</p>
-      </Container>
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 animate-spin mx-auto mb-4 text-blue-600" />
+          <p>Loading leaderboards...</p>
+        </div>
+      </div>
     );
   }
 
   if (error) {
     return (
-      <Container className="py-5">
-        <Alert variant="danger">
-          <Alert.Heading>Error</Alert.Heading>
-          <p>{error}</p>
-        </Alert>
-      </Container>
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <Card className="max-w-md border-red-200 bg-red-50">
+          <CardHeader>
+            <CardTitle className="text-red-800">Error</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-red-700">{error}</p>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   if (!data) {
     return (
-      <Container className="py-5">
-        <Alert variant="warning">No leaderboard data available</Alert>
-      </Container>
+      <div className="min-h-screen bg-gray-100 flex items-center justify-center">
+        <Card className="max-w-md border-yellow-200 bg-yellow-50">
+          <CardContent className="py-6">
+            <p className="text-yellow-800">No leaderboard data available</p>
+          </CardContent>
+        </Card>
+      </div>
     );
   }
 
   return (
     <>
-      <div className="background-image" style={{ backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url(/bgimg/${backgroundImageIndex}.jpeg)` }}>
-        <Container className="py-4">
-          <Card className="stats-container">
-            <Card.Header>
-              <Row className="align-items-center">
-                <Col>
-                  <h2 className="mb-0">Bedwars Leaderboards</h2>
-                  <small className="text-muted">
+      {/* Background with overlay */}
+      <div
+        className="min-h-screen leaderboard-bg-overlay"
+        style={{
+          backgroundImage: `linear-gradient(rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.2)), url(/bgimg/${backgroundImageIndex}.jpeg)`,
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+          backgroundRepeat: "no-repeat",
+          backgroundAttachment: "fixed",
+        }}
+      >
+        <div className="container mx-auto py-8 px-4">
+          <Card className="stats-container bg-white/95 backdrop-blur-sm">
+            <CardHeader>
+              <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                <div>
+                  <CardTitle className="text-2xl mb-2">Bedwars Leaderboards</CardTitle>
+                  <div className="text-sm text-muted-foreground">
                     Updated {new Date(data.time).toLocaleString()}
                     {data.cached && (
-                      <Badge bg="secondary" className="ms-2">
+                      <Badge variant="secondary" className="ml-2">
                         Cached
                       </Badge>
                     )}
-                  </small>
-                </Col>
-              </Row>
-            </Card.Header>
-            <Card.Body className="p-0">
-              <Nav variant="tabs" className="border-bottom">
-                {LB_ORDER.map((lbKey) => (
-                  <Nav.Item key={lbKey}>
-                    <Nav.Link active={activeTab === lbKey} onClick={() => setActiveTab(lbKey)} style={{ cursor: "pointer" }}>
+                  </div>
+                </div>
+              </div>
+            </CardHeader>
+            <CardContent className="p-0">
+              {/* Tab Navigation */}
+              <div className="border-b bg-gray-50">
+                <nav className="flex flex-wrap">
+                  {LB_ORDER.map((lbKey) => (
+                    <button
+                      key={lbKey}
+                      onClick={() => setActiveTab(lbKey)}
+                      className={`px-4 py-3 text-sm font-medium border-b-2 transition-colors ${
+                        activeTab === lbKey ? "border-blue-500 text-blue-600" : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300"
+                      }`}
+                    >
                       {FRIENDLY_LB_NAMES[lbKey as keyof typeof FRIENDLY_LB_NAMES]}
-                    </Nav.Link>
-                  </Nav.Item>
-                ))}
-              </Nav>
+                    </button>
+                  ))}
+                </nav>
+              </div>
 
-              <div className="p-3">
+              <div className="p-6">
                 {data.stats[activeTab] && (
-                  <Row className="g-4">
-                    {chunk(data.stats[activeTab], 10).map((playerChunk, chunkIndex) => (
-                      <Col key={chunkIndex} lg={6}>
-                        <Table striped hover responsive>
+                  <div className="space-y-6">
+                    {chunk(data.stats[activeTab], 25).map((chunk, chunkIndex) => (
+                      <div key={chunkIndex} className="overflow-x-auto">
+                        <table className="w-full text-sm">
                           <thead>
-                            <tr>
-                              <th style={{ width: "60px" }}>#</th>
-                              <th>Player</th>
-                              <th>Level</th>
-                              <th>Wins</th>
-                              <th>Final Kills</th>
+                            <tr className="border-b">
+                              <th className="text-left py-3 px-2">Rank</th>
+                              <th className="text-left py-3 px-2">Player</th>
+                              <th className="text-right py-3 px-2">{FRIENDLY_LB_NAMES[activeTab as keyof typeof FRIENDLY_LB_NAMES]}</th>
                             </tr>
                           </thead>
                           <tbody>
-                            {playerChunk.map((player, index) => {
-                              const rank = chunkIndex * 10 + index + 1;
+                            {chunk.map((entry, entryIndex) => {
+                              const rank = chunkIndex * 25 + entryIndex + 1;
                               return (
-                                <tr key={player.uuid}>
-                                  <td>
-                                    <Badge bg={rank === 1 ? "warning" : rank === 2 ? "secondary" : rank === 3 ? "success" : "light"} text={rank <= 3 ? "dark" : "dark"}>
-                                      {rank}
-                                    </Badge>
-                                  </td>
-                                  <td>
-                                    <div className="d-flex align-items-center">
-                                      <img
-                                        src={`https://crafatar.com/avatars/${player.uuid}?size=32&overlay=true`}
-                                        alt={`${player.username}'s avatar`}
-                                        className="me-2 rounded"
-                                        width="32"
-                                        height="32"
-                                      />
-                                      <a href={`/user/${player.username}`} className="text-decoration-none fw-bold">
-                                        {player.username}
-                                      </a>
+                                <tr key={entryIndex} className="border-b hover:bg-gray-50 transition-colors">
+                                  <td className="py-3 px-2">
+                                    <div className="flex items-center gap-2">
+                                      {getRankIcon(rank)}
+                                      <span className="font-mono text-sm">{rank}</span>
                                     </div>
                                   </td>
-                                  <td>{player.levelFormatted}</td>
-                                  <td>{player.totalWins.toLocaleString()}</td>
-                                  <td>{player.totalFinalsFormatted}</td>
+                                  <td className="py-3 px-2">
+                                    <div className="flex items-center gap-3">
+                                      <Image src={`https://minotar.net/avatar/${entry.username}/24.png`} alt={`${entry.username} avatar`} width={24} height={24} className="rounded" />
+                                      <Link href={`/user/${entry.username}`} className="font-medium text-blue-600 hover:text-blue-800 hover:underline">
+                                        {entry.username}
+                                      </Link>
+                                    </div>
+                                  </td>
+                                  <td className="py-3 px-2 text-right font-mono">{getStatValue(entry, activeTab).toLocaleString()}</td>
                                 </tr>
                               );
                             })}
                           </tbody>
-                        </Table>
-                      </Col>
+                        </table>
+                      </div>
                     ))}
-                  </Row>
+                  </div>
                 )}
-
-                {!data.stats[activeTab] && <Alert variant="info">No data available for this leaderboard.</Alert>}
               </div>
-            </Card.Body>
+            </CardContent>
           </Card>
-
-          <div className="text-center mt-4">
-            <p className="text-muted">Leaderboards are updated every 4 hours</p>
-          </div>
-        </Container>
-
-        <footer className="footer bg-dark text-light py-3 mt-5">
-          <Container>
-            <Row>
-              <Col className="text-center">
-                <p className="mb-0">&copy; 2025 Hypixel Bedwars Stats. Not affiliated with Hypixel or Mojang.</p>
-              </Col>
-            </Row>{" "}
-          </Container>
-        </footer>
+        </div>
       </div>
     </>
   );

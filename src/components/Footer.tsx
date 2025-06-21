@@ -1,9 +1,13 @@
 export default function Footer() {
   return (
-    <footer className="navbar navbar-dark bg-dark text-light footer mt-auto py-3" style={{ position: "absolute", bottom: 0, width: "100%" }}>
-      <div className="container-fluid text-center">
-        <p className="text-center w-100 my-3">
-          This website was made by <a href="https://shivam.pro">Shivam</a>. Copyright &copy; 2024 shivam.pro. All rights reserved.
+    <footer className="absolute bottom-0 w-full bg-slate-800 text-white py-6">
+      <div className="container mx-auto px-4 text-center">
+        <p className="text-center">
+          This website was made by{" "}
+          <a href="https://shivam.pro" className="text-blue-400 hover:text-blue-300 underline">
+            Shivam
+          </a>
+          . Copyright &copy; 2024 shivam.pro. All rights reserved.
         </p>
       </div>
     </footer>

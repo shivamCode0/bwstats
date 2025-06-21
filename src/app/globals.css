@@ -1,0 +1,219 @@
+@import "tailwindcss";
+
+:root {
+  --background: 0 0% 100%;
+  --foreground: 222.2 84% 4.9%;
+
+  --card: 0 0% 100%;
+  --card-foreground: 222.2 84% 4.9%;
+
+  --popover: 0 0% 100%;
+  --popover-foreground: 222.2 84% 4.9%;
+
+  --primary: 222.2 47.4% 11.2%;
+  --primary-foreground: 210 40% 98%;
+
+  --secondary: 210 40% 96%;
+  --secondary-foreground: 222.2 84% 4.9%;
+
+  --muted: 210 40% 96%;
+  --muted-foreground: 215.4 16.3% 46.9%;
+
+  --accent: 210 40% 96%;
+  --accent-foreground: 222.2 84% 4.9%;
+
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 214.3 31.8% 91.4%;
+  --input: 214.3 31.8% 91.4%;
+  --ring: 222.2 84% 4.9%;
+
+  --radius: 0.5rem;
+}
+
+.dark {
+  --background: 222.2 84% 4.9%;
+  --foreground: 210 40% 98%;
+
+  --card: 222.2 84% 4.9%;
+  --card-foreground: 210 40% 98%;
+
+  --popover: 222.2 84% 4.9%;
+  --popover-foreground: 210 40% 98%;
+
+  --primary: 210 40% 98%;
+  --primary-foreground: 222.2 47.4% 11.2%;
+
+  --secondary: 217.2 32.6% 17.5%;
+  --secondary-foreground: 210 40% 98%;
+
+  --muted: 217.2 32.6% 17.5%;
+  --muted-foreground: 215 20.2% 65.1%;
+
+  --accent: 217.2 32.6% 17.5%;
+  --accent-foreground: 210 40% 98%;
+
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 210 40% 98%;
+
+  --border: 217.2 32.6% 17.5%;
+  --input: 217.2 32.6% 17.5%;
+  --ring: 212.7 26.8% 83.9%;
+}
+
+/* Custom dark theme for the navbar and gaming aesthetic */
+.navbar-dark {
+  background-color: hsl(222.2 84% 4.9%) !important;
+}
+
+.bg-dark {
+  background-color: hsl(222.2 84% 4.9%) !important;
+}
+
+/* Keep existing gaming aesthetic */
+body {
+  min-height: 100vh;
+  position: relative;
+  padding-bottom: 6rem;
+}
+
+html {
+  min-height: 100vh;
+}
+
+/* Preserve original hero styling */
+.hero-image {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url("/banner.png");
+  height: 30rem;
+  max-height: 50vh;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+}
+
+.hero-text {
+  width: 40%;
+  min-width: 20rem;
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: white;
+}
+
+/* Preserve main content layout */
+.main-content {
+  display: flex;
+  gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+.main-content .leftbar {
+  max-width: 320px;
+  min-width: 280px;
+}
+
+@media (max-width: 768px) {
+  .main-content .leftbar {
+    max-width: unset;
+    min-width: unset;
+  }
+  .main-content .leftbar .no-mobile {
+    display: none;
+  }
+}
+
+.main-content .leftbar .player-img-box {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 1rem;
+}
+
+@media (max-width: 768px) {
+  .main-content .leftbar .player-img-box {
+    display: none;
+  }
+}
+
+.main-content .leftbar .player-img-box img {
+  max-width: 250px;
+  width: 100%;
+  height: auto;
+}
+
+/* Leaderboard background images */
+.leaderboard-bg-1 {
+  background-image: url("/bgimg/1.jpeg");
+}
+.leaderboard-bg-2 {
+  background-image: url("/bgimg/2.jpeg");
+}
+.leaderboard-bg-3 {
+  background-image: url("/bgimg/3.jpeg");
+}
+.leaderboard-bg-4 {
+  background-image: url("/bgimg/4.jpeg");
+}
+.leaderboard-bg-5 {
+  background-image: url("/bgimg/5.jpeg");
+}
+.leaderboard-bg-6 {
+  background-image: url("/bgimg/6.jpeg");
+}
+.leaderboard-bg-7 {
+  background-image: url("/bgimg/7.jpeg");
+}
+.leaderboard-bg-8 {
+  background-image: url("/bgimg/8.jpeg");
+}
+.leaderboard-bg-9 {
+  background-image: url("/bgimg/9.jpeg");
+}
+.leaderboard-bg-10 {
+  background-image: url("/bgimg/10.jpeg");
+}
+.leaderboard-bg-11 {
+  background-image: url("/bgimg/11.jpeg");
+}
+.leaderboard-bg-12 {
+  background-image: url("/bgimg/12.jpeg");
+}
+.leaderboard-bg-13 {
+  background-image: url("/bgimg/13.jpeg");
+}
+.leaderboard-bg-14 {
+  background-image: url("/bgimg/14.jpeg");
+}
+
+.leaderboard-bg-overlay {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.leaderboard-bg-overlay::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.4));
+  z-index: 1;
+}
+
+.leaderboard-bg-overlay > * {
+  position: relative;
+  z-index: 2;
+}
