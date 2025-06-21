@@ -1,6 +1,4 @@
 import axios from "axios";
-import { connectDB } from "./db";
-import LBQuery from "@/models/LBQuery";
 import { BWLeaderboardsData } from "@/types";
 import { getUser } from "./getUser";
 import { getStatsCached } from "./getStats";
@@ -124,12 +122,12 @@ export async function getLeaderboardsCached({ ip = "unknown" }: { ip?: string } 
     redisCache.set(cacheKey, data, 14400).catch((error) => {
       console.error("Failed to cache leaderboards in Redis:", error);
     }); // Fallback: still save to MongoDB for backup/analytics (optional)
-    try {
-      await connectDB();
-      (LBQuery as any).create({ ip, data }).catch(console.error);
-    } catch (error) {
-      console.error("MongoDB fallback error:", error);
-    }
+    // try {
+    //   await connectDB();
+    //   (LBQuery as any).create({ ip, data }).catch(console.error);
+    // } catch (error) {
+    //   console.error("MongoDB fallback error:", error);
+    // }
 
     return data;
   } catch (error) {

@@ -1,6 +1,4 @@
 import axios from "axios";
-import { connectDB } from "./db";
-import UserQuery from "@/models/UserQuery";
 import { PlayerUser, BWStatsData } from "@/types";
 import { FRIENDLY_EXTRA_MODE_NAMES, FRIENDLY_MODE_NAMES } from "./constants";
 import { redisCache } from "./redis";
@@ -188,22 +186,22 @@ export async function getStatsCached(user: PlayerUser, { ip = "unknown" }: { ip?
     redisCache.set(cacheKey, data, 300).catch((error) => {
       console.error("Failed to cache user data in Redis:", error);
     }); // Fallback: still save to MongoDB for backup/analytics (optional)
-    if (process.env.NODE_ENV !== "development") {
-      try {
-        await connectDB();
-        (UserQuery as any)
-          .create({
-            ip,
-            username: user.username,
-            uuid: user.uuid.toLowerCase(),
-            data,
-            cached: false,
-          })
-          .catch(console.error);
-      } catch (error) {
-        console.error("MongoDB fallback error:", error);
-      }
-    }
+    // if (process.env.NODE_ENV !== "development") {
+    //   try {
+    //     await connectDB();
+    //     (UserQuery as any)
+    //       .create({
+    //         ip,
+    //         username: user.username,
+    //         uuid: user.uuid.toLowerCase(),
+    //         data,
+    //         cached: false,
+    //       })
+    //       .catch(console.error);
+    //   } catch (error) {
+    //     console.error("MongoDB fallback error:", error);
+    //   }
+    // }
 
     return data;
   } catch (error) {

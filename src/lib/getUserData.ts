@@ -29,19 +29,6 @@ async function fetchUserData(username: string): Promise<BWStatsData> {
   } catch (error) {
     console.error("Error fetching user stats:", error);
     const message = error instanceof Error ? error.message : "Internal server error";
-
-    if (message.includes("Player Not Found")) {
-      throw new Error("Player not found");
-    }
-
-    if (message.includes("never played Bedwars")) {
-      throw new Error("This player has never played Bedwars");
-    }
-
-    if (message.includes("rate-limited")) {
-      throw new Error("API rate limited, please try again later");
-    }
-
     throw new Error(message);
   }
 }
