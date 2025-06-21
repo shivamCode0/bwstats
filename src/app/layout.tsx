@@ -4,6 +4,7 @@ import ModernNavigation from "@/components/ModernNavigation";
 import ModernFooter from "@/components/ModernFooter";
 import { minecraft } from "@/app/fonts/fonts";
 import { GoogleAnalytics } from "@next/third-parties/google";
+import Script from "next/script";
 
 export const metadata: Metadata = {
   title: "BW Stats: #1 Hypixel Bedwars Stats Checker",
@@ -37,12 +38,14 @@ export default function RootLayout({
           <ModernFooter />
         </div>
       </body>
-
-      {/* <!-- Cloudflare Web Analytics --> */}
-      <script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "fc6b8791fdb34ef18323c982296dda89"}'></script>
-      {/* <!-- End Cloudflare Web Analytics --> */}
-
-      <GoogleAnalytics gaId="G-RHQSJRV4VB" />
+      <>
+        {process.env.NODE_ENV === "production" && (
+          <>
+            <Script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "fc6b8791fdb34ef18323c982296dda89"}'></Script>
+            <GoogleAnalytics gaId="G-RHQSJRV4VB" />
+          </>
+        )}
+      </>
     </html>
   );
 }

@@ -1,5 +1,5 @@
 import axios from "axios";
-import "./db";
+import { connectDB } from "./db";
 import UserQuery from "@/models/UserQuery";
 import { PlayerUser, BWStatsData } from "@/types";
 import { FRIENDLY_EXTRA_MODE_NAMES, FRIENDLY_MODE_NAMES } from "./constants";
@@ -169,8 +169,17 @@ export async function getStats({ uuid, username }: PlayerUser): Promise<BWStatsD
 
 export async function getStatsCached(user: PlayerUser, { ip = "unknown" }: { ip?: string } = {}): Promise<BWStatsData> {
   try {
-    // Check for cached data within the last 5 minutes
-    const cacheTime = process.env.NODE_ENV === "development" ? 0.1 : 5; // minutes
+    // In development, skip database caching for speed
+    if (process.env.NODE_ENV === "development") {
+      console.log(`[DEV] Fetching fresh data for ${user.username} (skipping DB cache)`);
+      return await getStats(user);
+    }
+
+    // Connect to database only in production
+    await connectDB();
+
+    // Check for cached data within the last 5 minutes (production only)
+    const cacheTime = 5; // minutes
     const cutoffTime = new Date(Date.now() - cacheTime * 60 * 1000);
 
     const cachedQuery = await UserQuery.findOne({

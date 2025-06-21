@@ -30,7 +30,9 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  experimental: {},
+  experimental: {
+    ppr: true,
+  },
   typescript: {
     ignoreBuildErrors: true, // This is not recommended for production, but useful for development
   },
