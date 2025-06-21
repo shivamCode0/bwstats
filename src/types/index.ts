@@ -52,11 +52,11 @@ export type BWLeaderboardsData = {
     [key: string]: {
       uuid: string;
       username: string;
-      level: number;
-      levelFormatted: string;
-      totalWins: number;
-      totalFinals: number;
-      totalFinalsFormatted: string;
+      level?: number;
+      levelFormatted?: string;
+      totalWins?: number;
+      totalFinals?: number;
+      totalFinalsFormatted?: string;
     }[];
   };
 };

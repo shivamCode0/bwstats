@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import ModernNavigation from "@/components/ModernNavigation";
 import ModernFooter from "@/components/ModernFooter";
-
+import { minecraft } from "@/app/fonts/fonts";
 export const metadata: Metadata = {
   title: "BW Stats: #1 Hypixel Bedwars Stats Checker",
   description: "This easy and detailed Bedwars stat checker is the best way to see your success. Get all of the info you need in one place.",
@@ -28,10 +28,12 @@ export default function RootLayout({
         <meta name="msapplication-TileColor" content="#b91d47" />
         <meta name="theme-color" content="#ffffff" />
       </head>
-      <body className="min-h-screen relative pb-24">
-        <ModernNavigation />
-        {children}
-        <ModernFooter />
+      <body className={`min-h-screen relative pb-24`}>
+        <div className={minecraft.variable}>
+          <ModernNavigation />
+          {children}
+          <ModernFooter />
+        </div>
       </body>
     </html>
   );

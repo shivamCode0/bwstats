@@ -3,12 +3,15 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { BWStatsData } from "@/types";
-import { FRIENDLY_MODE_NAMES, FRIENDLY_EXTRA_MODE_NAMES, CHALLENGES } from "@/lib/constants";
+import { FRIENDLY_MODE_NAMES, FRIENDLY_EXTRA_MODE_NAMES, FRIENDLY_STAT_NAMES, CHALLENGES } from "@/lib/constants";
 import { generateSummary } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, User, Trophy, Target, Shield, Star, Swords, Crown, Coins, Zap, Bed, TrendingUp, Gamepad2, Percent } from "lucide-react";
 import Image from "next/image";
+import { minecraft } from "@/app/fonts/fonts";
+import clsx from "clsx";
+import ReactSkinview3d from "react-skinview3d";
 
 export default function UserPage() {
   const params = useParams();
@@ -113,20 +116,21 @@ export default function UserPage() {
     >
       {/* Background with overlay */}
       <div className="min-h-screen" style={{ backdropFilter: "blur(3px)" }}>
-        <div className="container mx-auto py-8 px-4">
-          <div className="main-content gap-6">
+        <div className="mx-auto py-8 px-4" style={{ maxWidth: "1300px" }}>
+          <div className="main-content gap-3 lg:gap-4 xl:gap-5">
             {/* Left sidebar */}
-            <div className="leftbar space-y-4">
-              <Card className="bg-white/95 backdrop-blur-sm">
+            <div className="leftbar space-y-3">
+              <Card className="bg-white/75 backdrop-blur-sm">
                 <CardHeader className="text-center">
-                  <div className="player-img-box">
-                    <Image src={`https://crafatar.com/renders/body/${data.uuid}?size=300&overlay`} alt={`${data.username} skin`} width={200} height={400} className="mx-auto" />
+                  <div className="">
+                    {/* <Image src={`https://crafatar.com/renders/body/${data.uuid}?size=300&overlay`} alt={`${data.username} skin`} width={200} height={400} className="mx-auto" /> */}
+                    <ReactSkinview3d skinUrl={`https://crafatar.com/skins/${data.uuid}`} height="430" width="200" />
                   </div>
                   <CardTitle className="flex items-center justify-center gap-2">
                     <User className="w-5 h-5" />
                     {data.username}
                   </CardTitle>
-                  <div className="space-y-2">
+                  <div className="space-y-2 mt-2">
                     <Badge variant="outline" className="text-sm">
                       Level {data.stats.level}
                     </Badge>
@@ -135,11 +139,11 @@ export default function UserPage() {
                 </CardHeader>
               </Card>
               {/* Quick Stats - Original 4 important stats */}
-              <Card className="bg-white/95 backdrop-blur-sm">
+              <Card className="bg-white/75 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle className="text-lg">Quick Stats</CardTitle>
                 </CardHeader>{" "}
-                <CardContent className="space-y-3">
+                <CardContent className="space-y-2">
                   {[
                     {
                       icon: Star,
@@ -206,9 +210,30 @@ export default function UserPage() {
               </Card>
             </div>
             {/* Main content */}
-            <div className="flex-1 space-y-6">
+            <div className="flex-1 space-y-3">
+              <Card className="bg-white/75 backdrop-blur-sm mb-3">
+                <CardHeader className="text-center py-6">
+                  <div className="flex items-center justify-center gap-3 lg:gap-4 xl:gap-5 mb-2">
+                    <Image
+                      style={{ imageRendering: "pixelated" }}
+                      src={`https://crafatar.com/avatars/${data.uuid}?size=64&overlay`}
+                      alt={`${data.username} face`}
+                      width={64}
+                      height={64}
+                      className="rounded-sm"
+                    />
+
+                    <CardTitle className={clsx("font-bold tracking-wide ml-3", data.username.length > 12 ? "text-5xl" : "text-6xl")}>
+                      <span className={clsx(minecraft.className)}>{data.username}</span>
+                      {/* add second line to say &apos;s Bedwars Stats */}
+                      <br />
+                    </CardTitle>
+                  </div>
+                  <p className="text-gray-600">Complete Hypixel Bedwars Statistics and Performance Overview</p>
+                </CardHeader>
+              </Card>
               {/* Comprehensive Quick Stats */}
-              <Card className="bg-white/95 backdrop-blur-sm">
+              <Card className="bg-white/75 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
                     <Trophy className="w-5 h-5 text-yellow-500" />
@@ -216,7 +241,7 @@ export default function UserPage() {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+                  <div className="grid grid-cols-3 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 lg:gap-4 xl:gap-5 xl:gap-4">
                     {[
                       {
                         icon: Star,
@@ -293,7 +318,7 @@ export default function UserPage() {
                         textColor: "text-orange-600",
                         value:
                           data.stats.modes.total.finalDeaths > 0 ? (data.stats.modes.total.finalKills / data.stats.modes.total.finalDeaths).toFixed(2) : data.stats.modes.total.finalKills.toFixed(2),
-                        label: "Final K/D Ratio (FKDR)",
+                        label: "Final K/D Ratio",
                         textLabelColor: "text-orange-700",
                       },
                       {
@@ -354,65 +379,99 @@ export default function UserPage() {
                     ].map((stat, index) => (
                       <div
                         key={index}
-                        className={`text-center p-4 bg-gradient-to-br ${stat.fromColor} ${stat.toColor} rounded-lg border ${stat.borderColor} hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-default`}
+                        className={`text-center p-3 xl:p-4 bg-gradient-to-br ${stat.fromColor} ${stat.toColor} rounded-lg border ${stat.borderColor} hover:shadow-lg hover:scale-105 transition-all duration-200 cursor-default flex flex-col items-center justify-center`}
                       >
                         <stat.icon className={`w-6 h-6 ${stat.iconColor} mx-auto mb-2`} />
                         <div className={`text-2xl font-bold ${stat.textColor}`}>{stat.value}</div>
-                        <div className={`text-sm ${stat.textLabelColor} font-medium`}>{stat.label}</div>
+                        <div className={clsx(stat.textLabelColor, "font-medium", stat.label.length > 10 ? "text-sm" : "text-base")}>{stat.label}</div>
                       </div>
                     ))}
                   </div>
                 </CardContent>
-              </Card>
-              {/* Main Modes Table */}
-              <Card className="bg-white/95 backdrop-blur-sm">
+              </Card>{" "}
+              {/* Main Modes Table - Transposed with Dynamic Stats */}
+              <Card className="bg-white/75 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle>Main Mode Statistics</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <div className="overflow-x-auto">
-                    <table className="w-full text-sm">
+                    <table className={clsx("w-full text-sm md:text-base", minecraft.className)}>
                       <thead>
-                        ``
                         <tr className="border-b">
-                          <th className="text-left py-3 px-2">Mode</th>
-                          <th className="text-right py-3 px-2">Games Played</th>
-                          <th className="text-right py-3 px-2">Wins</th>
-                          <th className="text-right py-3 px-2">Losses</th>
-                          <th className="text-right py-3 px-2">WLR</th>
-                          <th className="text-right py-3 px-2">Final Kills</th>
-                          <th className="text-right py-3 px-2">Final Deaths</th>
-                          <th className="text-right py-3 px-2">FKDR</th>
-                          <th className="text-right py-3 px-2">Beds Broken</th>
-                          <th className="text-right py-3 px-2">Beds Lost</th>
+                          <th className="text-left py-3 px-2"></th>
+                          {Object.entries(FRIENDLY_MODE_NAMES).map(([mode, friendlyName]) => (
+                            <th key={mode} className="text-right py-3 px-2 min-w-[100px]">
+                              {friendlyName}
+                            </th>
+                          ))}
                         </tr>
                       </thead>
                       <tbody>
-                        {Object.entries(FRIENDLY_MODE_NAMES).map(([mode, friendlyName]) => {
-                          const modeData = data.stats.modes[mode];
-                          if (!modeData) return null;
-                          return (
-                            <tr key={mode} className="border-b hover:bg-gray-50">
-                              <td className="py-3 px-2 font-medium">{friendlyName}</td>
-                              <td className="py-3 px-2 text-right font-mono">{modeData.gamesPlayed?.toLocaleString() || 0}</td>
-                              <td className="py-3 px-2 text-right font-mono">{modeData.wins?.toLocaleString() || 0}</td>
-                              <td className="py-3 px-2 text-right font-mono">{modeData.losses?.toLocaleString() || 0}</td>
-                              <td className="py-3 px-2 text-right font-mono">{modeData.losses > 0 ? (modeData.wins / modeData.losses).toFixed(2) : modeData.wins.toFixed(2)}</td>
-                              <td className="py-3 px-2 text-right font-mono">{modeData.finalKills?.toLocaleString() || 0}</td>
-                              <td className="py-3 px-2 text-right font-mono">{modeData.finalDeaths?.toLocaleString() || 0}</td>
-                              <td className="py-3 px-2 text-right font-mono">{modeData.finalDeaths > 0 ? (modeData.finalKills / modeData.finalDeaths).toFixed(2) : modeData.finalKills.toFixed(2)}</td>
-                              <td className="py-3 px-2 text-right font-mono">{modeData.bedsBroken?.toLocaleString() || 0}</td>
-                              <td className="py-3 px-2 text-right font-mono">{modeData.bedsLost?.toLocaleString() || 0}</td>
-                            </tr>
-                          );
-                        })}
+                        {FRIENDLY_STAT_NAMES.map((statGroup, groupIndex) =>
+                          Object.entries(statGroup).map(([statKey, statName]) => {
+                            const calculateStat = (
+                              modeData:
+                                | {
+                                    gamesPlayed?: number;
+                                    wins?: number;
+                                    losses?: number;
+                                    kills?: number;
+                                    deaths?: number;
+                                    finalKills?: number;
+                                    finalDeaths?: number;
+                                    bedsBroken?: number;
+                                    bedsLost?: number;
+                                    winstreak?: number;
+                                    itemsPurchased?: number;
+                                    ironCollected?: number;
+                                    goldCollected?: number;
+                                    diamondsCollected?: number;
+                                    emeraldsCollected?: number;
+                                    resourcesCollected?: number;
+                                    [key: string]: number | undefined;
+                                  }
+                                | undefined,
+                              key: string
+                            ) => {
+                              if (!modeData) return "0";
+
+                              switch (key) {
+                                case "wlr":
+                                  return (modeData.losses ?? 0) > 0 ? ((modeData.wins ?? 0) / (modeData.losses ?? 1)).toFixed(2) : (modeData.wins ?? 0).toFixed(2);
+                                case "kdr":
+                                  return (modeData.deaths ?? 0) > 0 ? ((modeData.kills ?? 0) / (modeData.deaths ?? 1)).toFixed(2) : (modeData.kills ?? 0).toFixed(2);
+                                case "fkdr":
+                                  return (modeData.finalDeaths ?? 0) > 0 ? ((modeData.finalKills ?? 0) / (modeData.finalDeaths ?? 1)).toFixed(2) : (modeData.finalKills ?? 0).toFixed(2);
+                                case "bblr":
+                                  return (modeData.bedsLost ?? 0) > 0 ? ((modeData.bedsBroken ?? 0) / (modeData.bedsLost ?? 1)).toFixed(2) : (modeData.bedsBroken ?? 0).toFixed(2);
+                                default:
+                                  return (modeData[key] ?? 0).toLocaleString();
+                              }
+                            };
+
+                            return (
+                              <tr key={`${groupIndex}-${statKey}`} className="border-b hover:bg-gray-50">
+                                <td className="py-2 md:py-3 px-1 md:px-2 font-medium">{statName}</td>
+                                {Object.entries(FRIENDLY_MODE_NAMES).map(([mode]) => {
+                                  const modeData = data.stats.modes[mode];
+                                  return (
+                                    <td key={mode} className="py-2 md:py-3 px-1 md:px-2 text-right font-mono">
+                                      {calculateStat(modeData, statKey)}
+                                    </td>
+                                  );
+                                })}
+                              </tr>
+                            );
+                          })
+                        )}
                       </tbody>
                     </table>
                   </div>
                 </CardContent>
               </Card>
               {/* Additional Modes Table */}
-              <Card className="bg-white/95 backdrop-blur-sm">
+              <Card className="bg-white/75 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle>Additional Mode Statistics</CardTitle>
                 </CardHeader>
@@ -436,7 +495,7 @@ export default function UserPage() {
                       <tbody>
                         {Object.entries(FRIENDLY_EXTRA_MODE_NAMES).map(([mode, friendlyName]) => {
                           const modeData = data.stats.modes[mode];
-                          if (!modeData) return null;
+                          if (!modeData || modeData?.gamesPlayed === 0) return null;
                           return (
                             <tr key={mode} className="border-b hover:bg-gray-50">
                               <td className="py-3 px-2 font-medium">{friendlyName}</td>
@@ -459,7 +518,7 @@ export default function UserPage() {
               </Card>
               {/* Summary */}
               {summary && (
-                <Card className="bg-white/95 backdrop-blur-sm">
+                <Card className="bg-white/75 backdrop-blur-sm">
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Star className="w-5 h-5 text-yellow-500" />
@@ -472,7 +531,7 @@ export default function UserPage() {
                 </Card>
               )}
               {/* Challenges */}
-              <Card className="bg-white/95 backdrop-blur-sm">
+              <Card className="bg-white/75 backdrop-blur-sm">
                 <CardHeader>
                   <CardTitle>Challenges</CardTitle>
                 </CardHeader>
@@ -496,7 +555,7 @@ export default function UserPage() {
                 </CardContent>
               </Card>
               {/* Footer info */}
-              <Card className="bg-white/95 backdrop-blur-sm">
+              <Card className="bg-white/75 backdrop-blur-sm">
                 <CardContent className="text-center py-4">
                   <p className="text-sm text-muted-foreground">Data updated at {timeFormatted} • Cached for performance</p>
                 </CardContent>

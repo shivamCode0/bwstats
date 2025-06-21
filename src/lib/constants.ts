@@ -15,14 +15,17 @@ export const FRIENDLY_EXTRA_MODE_NAMES = {
   eight_two_swap: "Doubles Swap",
   eight_two_ultimate: "Doubles Ultimate",
   eight_two_voidless: "Doubles Voidless",
+  eight_two_underworld: "Doubles Underworld",
   four_four_lucky: "4v4v4v4 Lucky",
   four_four_armed: "4v4v4v4 Armed",
   four_four_rush: "4v4v4v4 Rush",
   four_four_swap: "4v4v4v4 Swap",
   four_four_ultimate: "4v4v4v4 Ultimate",
   four_four_voidless: "4v4v4v4 Voidless",
+  four_four_underworld: "4v4v4v4 Underworld",
   castle: "Castle",
-  tourney_bedwars4s_0: "Tourney 4v4v4v4",
+  tourney_bedwars4s_0: "Tourney 4v4v4v4 1",
+  tourney_bedwars4s_1: "Tourney 4v4v4v4 2",
   tourney_bedwars_two_four_0: "Tourney 4v4",
 };
 export const FRIENDLY_STAT_NAMES = [
@@ -57,13 +60,14 @@ export const FRIENDLY_STAT_NAMES = [
   },
 ];
 
+export const LB_ORDER = ["bedwars_level", "wins_new", "wins_1", "final_kills_new", "final_kills_1"];
 export const FRIENDLY_LB_NAMES = {
-  finalKills: "Lifetime Final Kills - All Modes",
-  level: "BW Level",
-  wins: "Lifetime Wins - All Modes",
+  bedwars_level: "Level",
+  wins_new: "Lifetime Wins",
+  wins_1: "Weekly Wins",
+  final_kills_new: "Lifetime Final Kills",
+  final_kills_1: "Weekly Final Kills",
 };
-
-export const LB_ORDER = ["level", "wins", "finalKills"];
 
 export const CHALLENGES = {
   no_team_upgrades: { name: "Renegade", rules: ["Team upgrades and traps are disabled", "You cannot pick up diamonds"], reward: "Cat Death Cry", n: 0 },

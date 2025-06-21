@@ -48,6 +48,9 @@ const config: Config = {
           foreground: "hsl(var(--card-foreground))",
         },
       },
+      fontFamily: {
+        minecraft: ["var(--font-minecraft)"],
+      },
       borderRadius: {
         lg: "var(--radius)",
         md: "calc(var(--radius) - 2px)",

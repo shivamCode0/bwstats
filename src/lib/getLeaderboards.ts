@@ -4,6 +4,7 @@ import LBQuery from "@/models/LBQuery";
 import { BWLeaderboardsData } from "@/types";
 import { getUser } from "./getUser";
 import { getStatsCached } from "./getStats";
+import React from "react";
 
 export async function getLeaderboards(): Promise<BWLeaderboardsData> {
   const key = process.env.HYPIXEL_API_KEY;
@@ -34,45 +35,44 @@ export async function getLeaderboards(): Promise<BWLeaderboardsData> {
 
     const processedLeaderboards = Object.fromEntries(
       leaderboards.map((board) => {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { path, location, ...rest } = board;
+        const { path, ...rest } = board;
         return [path, rest];
       })
     );
 
     // Get player details for top leaderboards
-    const leaderboardStats: {
-      [key: string]: Array<{
-        uuid: string;
-        username: string;
-        level: number;
-        levelFormatted: string;
-        totalWins: number;
-        totalFinals: number;
-        totalFinalsFormatted: string;
-      }>;
-    } = {};
+    const leaderboardStats: BWLeaderboardsData["stats"] = {};
 
-    for (const [key, board] of Object.entries({
-      level: processedLeaderboards.bedwars_level,
-      wins: processedLeaderboards.wins_new,
-      finalKills: processedLeaderboards.final_kills_new,
-    })) {
+    // for (const [key, board] of Object.entries({
+    //   level: processedLeaderboards.bedwars_level,
+    //   wins: processedLeaderboards.wins_new,
+    //   finalKills: processedLeaderboards.final_kills_new,
+    // }))
+
+    const getUserCached = React.cache(getUser);
+    const getStatsCachedCached = React.cache(getStatsCached);
+    for (const [key, board] of Object.entries(processedLeaderboards)) {
       const typedBoard = board as { leaders: string[] };
-      const uuids = typedBoard.leaders.slice(0, 20);
+      const uuids = typedBoard.leaders;
       const players = await Promise.all(
-        uuids.map(async (uuid: string) => {
+        uuids.map(async (uuid: string, i) => {
           try {
-            const user = await getUser(uuid);
-            const stats = await getStatsCached(user);
+            const user = await getUserCached(uuid);
+            if (i < 20) {
+              const stats = await getStatsCachedCached(user);
+              return {
+                uuid: stats.uuid,
+                username: stats.username,
+                level: stats.stats.level,
+                levelFormatted: stats.stats.levelFormatted,
+                totalWins: stats.stats.modes.total.wins,
+                totalFinals: stats.stats.modes.total.finalKills,
+                totalFinalsFormatted: stats.stats.modes.total.finalKills.toLocaleString(),
+              };
+            }
             return {
-              uuid: stats.uuid,
-              username: stats.username,
-              level: stats.stats.level,
-              levelFormatted: stats.stats.levelFormatted,
-              totalWins: stats.stats.modes.total.wins,
-              totalFinals: stats.stats.modes.total.finalKills,
-              totalFinalsFormatted: stats.stats.modes.total.finalKills.toLocaleString(),
+              uuid: user.uuid,
+              username: user.username,
             };
           } catch (error) {
             console.error(`Error fetching player ${uuid}:`, error);

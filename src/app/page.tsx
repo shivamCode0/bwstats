@@ -21,31 +21,38 @@ export default function Home() {
   };
 
   return (
-    <>
+    <div className="mb-16">
       {/* Preserve original hero image styling */}
       <div className="hero-image">
-        <div className="hero-text">
-          <h1 className="text-5xl font-bold mb-4">Bedwars Stats</h1>
-          <label htmlFor="input-mcusername" className="block text-xl mb-6">
-            Enter your username to see your stats.
-          </label>
-          <form onSubmit={handleSubmit}>
-            <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
-              <Input
-                name="user"
-                type="text"
-                placeholder="Minecraft Username"
-                id="input-mcusername"
-                required
-                value={username}
-                onChange={(e) => setUsername(e.target.value.replace(/\s/g, ""))}
-                className="flex-1 text-lg py-6 bg-white/10 border-white/20 text-white placeholder:text-white/70 backdrop-blur-sm"
-              />
-              <Button type="submit" className="text-lg py-6 px-8 bg-blue-600 hover:bg-blue-700">
-                View Stats
-              </Button>
-            </div>
-          </form>
+        <div
+          className="w-1/1 h-1/1"
+          style={{
+            backdropFilter: "blur(5px)",
+          }}
+        >
+          <div className="hero-text">
+            <h1 className="text-5xl font-bold mb-4">Bedwars Stats</h1>
+            <label htmlFor="input-mcusername" className="block text-xl mb-6">
+              Enter your username to see your stats.
+            </label>
+            <form onSubmit={handleSubmit}>
+              <div className="flex flex-col sm:flex-row gap-3 max-w-md mx-auto">
+                <Input
+                  name="user"
+                  type="text"
+                  placeholder="Minecraft Username"
+                  id="input-mcusername"
+                  required
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value.replace(/\s/g, ""))}
+                  className="flex-1 text-lg py-6 bg-white/10 border-white/20 text-white placeholder:text-white/70 backdrop-blur-sm"
+                />
+                <Button type="submit" className="text-lg py-6 px-8 bg-blue-600 hover:bg-blue-700">
+                  View Stats
+                </Button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
 
@@ -96,6 +103,6 @@ export default function Home() {
           </Card>
         </div>
       </div>
-    </>
+    </div>
   );
 }

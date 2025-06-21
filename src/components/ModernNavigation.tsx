@@ -29,30 +29,32 @@ export default function ModernNavigation() {
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container mx-auto px-4">
+    <nav className="sticky top-0 z-50 w-full border-b bg-white/40 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 shadow-sm">
+      <div className="container mx-auto px-4 lg:px-6">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
-          <Link href="/" className="flex items-center space-x-2">
-            <Image src="/short_bed.png" alt="BW Stats" height={32} width={32} className="rounded-md" />
-            <span className="hidden font-bold sm:inline-block">Hypixel Bedwars Stats</span>
-            <span className="font-bold sm:hidden">BW Stats</span>
+          <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
+            <Image src="/short_bed.png" alt="BW Stats" height={36} width={36} className="rounded-lg" />
+            <div className="flex flex-col">
+              <span className="hidden font-bold text-lg leading-tight sm:inline-block">Hypixel Bedwars Stats</span>
+              <span className="font-bold text-lg sm:hidden">BW Stats</span>
+            </div>
           </Link>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:space-x-6">
+          <div className="hidden md:flex md:items-center md:space-x-8">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className="text-sm font-medium transition-colors hover:text-primary">
+              <Link key={item.href} href={item.href} className="text-base font-medium text-gray-700 hover:text-gray-900 transition-colors duration-200 hover:underline underline-offset-4">
                 {item.label}
               </Link>
             ))}
           </div>
 
           {/* Search Form - Desktop */}
-          <div className="hidden md:flex md:items-center md:space-x-2">
+          <div className="hidden md:flex md:items-center md:space-x-3">
             <form onSubmit={handleSearch} className="flex items-center space-x-2">
-              <Input type="search" placeholder="Search player..." value={searchUsername} onChange={(e) => setSearchUsername(e.target.value)} className="w-64" />
-              <Button type="submit" size="sm" variant="outline">
+              <Input type="search" placeholder="Search player..." value={searchUsername} onChange={(e) => setSearchUsername(e.target.value)} className="w-56 h-9 text-sm" />
+              <Button type="submit" size="sm" variant="default" className="h-9 px-3">
                 <Search className="h-4 w-4" />
                 <span className="sr-only">Search</span>
               </Button>
@@ -60,29 +62,36 @@ export default function ModernNavigation() {
           </div>
 
           {/* Mobile menu button */}
-          <Button variant="ghost" size="sm" className="md:hidden" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
-            {isMobileMenuOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
+          <Button variant="ghost" size="sm" className="md:hidden h-10 w-10 p-0" onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}>
+            {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
             <span className="sr-only">Toggle menu</span>
           </Button>
         </div>
 
         {/* Mobile Navigation */}
         {isMobileMenuOpen && (
-          <div className="border-t py-4 md:hidden">
-            <div className="flex flex-col space-y-3">
+          <div className="border-t bg-white/95 backdrop-blur-sm md:hidden">
+            <div className="flex flex-col space-y-1 py-4">
               {navItems.map((item) => (
-                <Link key={item.href} href={item.href} className="text-sm font-medium transition-colors hover:text-primary" onClick={() => setIsMobileMenuOpen(false)}>
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="px-2 py-3 text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-md transition-colors duration-200"
+                  onClick={() => setIsMobileMenuOpen(false)}
+                >
                   {item.label}
                 </Link>
               ))}
 
               {/* Mobile Search */}
-              <form onSubmit={handleSearch} className="flex items-center space-x-2 pt-3">
-                <Input type="search" placeholder="Search player..." value={searchUsername} onChange={(e) => setSearchUsername(e.target.value)} className="flex-1" />
-                <Button type="submit" size="sm" variant="outline">
-                  <Search className="h-4 w-4" />
-                </Button>
-              </form>
+              <div className="px-2 pt-4 border-t mt-4">
+                <form onSubmit={handleSearch} className="flex items-center space-x-2">
+                  <Input type="search" placeholder="Search player..." value={searchUsername} onChange={(e) => setSearchUsername(e.target.value)} className="flex-1 h-10 text-base" />
+                  <Button type="submit" size="sm" variant="default" className="h-10 px-4">
+                    <Search className="h-4 w-4" />
+                  </Button>
+                </form>
+              </div>
             </div>
           </div>
         )}

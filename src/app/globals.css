@@ -1,6 +1,8 @@
 @import "tailwindcss";
 
 :root {
+  /* --font-sans: --font-minecraft; */
+
   --background: 0 0% 100%;
   --foreground: 222.2 84% 4.9%;
 
@@ -84,7 +86,7 @@ html {
 
 /* Preserve original hero styling */
 .hero-image {
-  background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url("/banner.png");
+  background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("/banner.png");
   height: 30rem;
   max-height: 50vh;
   background-position: center;
@@ -107,13 +109,13 @@ html {
 /* Preserve main content layout */
 .main-content {
   display: flex;
-  gap: 1.5rem;
+  /* gap: 1.5rem; */
 }
 
 @media (max-width: 768px) {
   .main-content {
     flex-direction: column;
-    gap: 1rem;
+    /* gap: 1rem; */
   }
 }
 
@@ -139,9 +141,15 @@ html {
   padding: 1rem;
 }
 
-@media (max-width: 768px) {
-  .main-content .leftbar .player-img-box {
+@media (max-width: 900px) {
+  .main-content .leftbar {
     display: none;
+  }
+}
+@media (max-width: 1024px) {
+  .main-content .leftbar {
+    max-width: 240px;
+    min-width: 220px;
   }
 }
 
@@ -149,50 +157,6 @@ html {
   max-width: 250px;
   width: 100%;
   height: auto;
-}
-
-/* Leaderboard background images */
-.leaderboard-bg-1 {
-  background-image: url("/bgimg/1.jpeg");
-}
-.leaderboard-bg-2 {
-  background-image: url("/bgimg/2.jpeg");
-}
-.leaderboard-bg-3 {
-  background-image: url("/bgimg/3.jpeg");
-}
-.leaderboard-bg-4 {
-  background-image: url("/bgimg/4.jpeg");
-}
-.leaderboard-bg-5 {
-  background-image: url("/bgimg/5.jpeg");
-}
-.leaderboard-bg-6 {
-  background-image: url("/bgimg/6.jpeg");
-}
-.leaderboard-bg-7 {
-  background-image: url("/bgimg/7.jpeg");
-}
-.leaderboard-bg-8 {
-  background-image: url("/bgimg/8.jpeg");
-}
-.leaderboard-bg-9 {
-  background-image: url("/bgimg/9.jpeg");
-}
-.leaderboard-bg-10 {
-  background-image: url("/bgimg/10.jpeg");
-}
-.leaderboard-bg-11 {
-  background-image: url("/bgimg/11.jpeg");
-}
-.leaderboard-bg-12 {
-  background-image: url("/bgimg/12.jpeg");
-}
-.leaderboard-bg-13 {
-  background-image: url("/bgimg/13.jpeg");
-}
-.leaderboard-bg-14 {
-  background-image: url("/bgimg/14.jpeg");
 }
 
 .leaderboard-bg-overlay {
@@ -216,4 +180,36 @@ html {
 .leaderboard-bg-overlay > * {
   position: relative;
   z-index: 2;
+}
+
+/* Apply Minecraft font to all headers by default */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-minecraft), sans-serif !important;
+}
+
+/* Ensure body and other elements use default font */
+body,
+p,
+span,
+div,
+a,
+button,
+input,
+textarea,
+select {
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+/* Utility classes for explicit font control */
+.font-minecraft {
+  font-family: var(--font-minecraft), sans-serif !important;
+}
+
+.font-sans {
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
 }
