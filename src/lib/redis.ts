@@ -20,6 +20,11 @@ const getRedisClient = () => {
 
 export const redisCache = {
   async get<T>(key: string): Promise<T | null> {
+    // During build time, skip Redis calls
+    if (process.env.NODE_ENV === "production" && process.env.NEXT_PHASE === "phase-production-build") {
+      return null;
+    }
+
     const client = getRedisClient();
     if (!client) return null;
 
@@ -31,12 +36,12 @@ export const redisCache = {
       return null;
     }
   },
-
   async set(key: string, value: any, ttlSeconds: number): Promise<boolean> {
     const client = getRedisClient();
     if (!client) return false;
 
     try {
+      // Use the native client for writes (not during static generation)
       await client.setex(key, ttlSeconds, JSON.stringify(value));
       return true;
     } catch (error) {

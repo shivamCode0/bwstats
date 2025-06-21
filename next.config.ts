@@ -33,7 +33,7 @@ const nextConfig: NextConfig = {
   },
 
   experimental: {
-    ppr: !isDev,
+    ppr: isDev ? false : "incremental",
   },
   typescript: {
     ignoreBuildErrors: true, // This is not recommended for production, but useful for development

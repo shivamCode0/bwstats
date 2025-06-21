@@ -106,6 +106,20 @@ export async function getLeaderboardsCached({ ip = "unknown" }: { ip?: string } 
   try {
     const cacheKey = "leaderboards";
 
+    // During build time, return empty data to avoid external API calls
+    if (process.env.NODE_ENV === "production" && process.env.NEXT_PHASE === "phase-production-build") {
+      console.log("Build time detected - returning empty leaderboard data");
+      return {
+        stats: {
+          bedwars_level: [],
+          wins_new: [],
+          final_kills_new: [],
+        },
+        cached: false,
+        time: new Date(),
+      };
+    }
+
     // Try Redis cache first
     const cachedData = await redisCache.get<BWLeaderboardsData>(cacheKey);
     if (cachedData) {
@@ -121,14 +135,7 @@ export async function getLeaderboardsCached({ ip = "unknown" }: { ip?: string } 
     // Cache in Redis with 4 hour TTL (don't await to avoid blocking the response)
     redisCache.set(cacheKey, data, 14400).catch((error) => {
       console.error("Failed to cache leaderboards in Redis:", error);
-    }); // Fallback: still save to MongoDB for backup/analytics (optional)
-    // try {
-    //   await connectDB();
-    //   (LBQuery as any).create({ ip, data }).catch(console.error);
-    // } catch (error) {
-    //   console.error("MongoDB fallback error:", error);
-    // }
-
+    });
     return data;
   } catch (error) {
     console.error("Error in getLeaderboardsCached:", error);

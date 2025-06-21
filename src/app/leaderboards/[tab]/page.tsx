@@ -227,7 +227,7 @@ export default function LeaderboardsPage() {
                                   <Badge className={`${getRankBadgeColor(rank)} mb-2 text-sm font-bold border-0`}>#{rank}</Badge>
                                   <h4 className={clsx("font-bold text-lg mb-2", minecraft.className)}>
                                     <Link
-                                      prefetch={i < 5}
+                                      prefetch={false}
                                       href={`/user/${v.username}`}
                                       className={`hover:underline ${rank === 1 ? "text-yellow-700" : rank === 2 ? "text-gray-700" : "text-amber-700"}`}
                                     >
@@ -287,6 +287,7 @@ export default function LeaderboardsPage() {
                                         <div>
                                           <Link
                                             href={`/user/${entry.username}`}
+                                            prefetch={false}
                                             className={clsx("font-semibold hover:underline transition-colors", isTopTen ? "text-green-700 text-lg" : isTopHundred ? "text-blue-700" : "text-gray-700")}
                                           >
                                             {entry.username}

@@ -185,23 +185,7 @@ export async function getStatsCached(user: PlayerUser, { ip = "unknown" }: { ip?
     // Cache in Redis with 5 minute TTL (don't await to avoid blocking the response)
     redisCache.set(cacheKey, data, 300).catch((error) => {
       console.error("Failed to cache user data in Redis:", error);
-    }); // Fallback: still save to MongoDB for backup/analytics (optional)
-    // if (process.env.NODE_ENV !== "development") {
-    //   try {
-    //     await connectDB();
-    //     (UserQuery as any)
-    //       .create({
-    //         ip,
-    //         username: user.username,
-    //         uuid: user.uuid.toLowerCase(),
-    //         data,
-    //         cached: false,
-    //       })
-    //       .catch(console.error);
-    //   } catch (error) {
-    //     console.error("MongoDB fallback error:", error);
-    //   }
-    // }
+    }); 
 
     return data;
   } catch (error) {
