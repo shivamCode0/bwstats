@@ -226,11 +226,7 @@ export default function LeaderboardsPage() {
                                   </div>
                                   <Badge className={`${getRankBadgeColor(rank)} mb-2 text-sm font-bold border-0`}>#{rank}</Badge>
                                   <h4 className={clsx("font-bold text-lg mb-2", minecraft.className)}>
-                                    <Link
-                                      prefetch={false}
-                                      href={`/user/${v.username}`}
-                                      className={`hover:underline ${rank === 1 ? "text-yellow-700" : rank === 2 ? "text-gray-700" : "text-amber-700"}`}
-                                    >
+                                    <Link href={`/user/${v.username}`} className={`hover:underline ${rank === 1 ? "text-yellow-700" : rank === 2 ? "text-gray-700" : "text-amber-700"}`}>
                                       {v.username}
                                     </Link>
                                   </h4>
@@ -285,13 +281,12 @@ export default function LeaderboardsPage() {
                                           style={{ imageRendering: "pixelated" }}
                                         />
                                         <div>
-                                          <Link
+                                          <a
                                             href={`/user/${entry.username}`}
-                                            prefetch={false}
                                             className={clsx("font-semibold hover:underline transition-colors", isTopTen ? "text-green-700 text-lg" : isTopHundred ? "text-blue-700" : "text-gray-700")}
                                           >
                                             {entry.username}
-                                          </Link>
+                                          </a>
                                           <p className="text-sm text-gray-500">{FRIENDLY_LB_NAMES[activeTab as keyof typeof FRIENDLY_LB_NAMES].split(" - ")[0]}</p>
                                         </div>
                                       </div>
