@@ -6,6 +6,8 @@ import Link from "next/link";
 import ClientHomePage from "./ClientHomePage";
 import LeaderboardPreviewSection from "@/components/LeaderboardPreviewSection";
 
+export const revalidate = 3600;
+
 export default function Home() {
   // Example usernames for testing
   const exampleUsernames = ["Technoblade", "Dream", "Grian", "TommyInnit", "Wilbur"];

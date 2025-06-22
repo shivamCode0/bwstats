@@ -24,13 +24,13 @@ export default function ModernNavigation() {
 
   const navItems = [
     { href: "/", label: "Stats" },
-    { href: "/about", label: "About" },
     { href: "/leaderboards", label: "Leaderboards" },
+    { href: "/about", label: "About" },
   ];
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b bg-white/40 backdrop-blur-md supports-[backdrop-filter]:bg-background/80 shadow-sm">
-      <div className="container mx-auto px-4 lg:px-6">
+    <nav className="sticky top-0 z-50 w-full bosrder-b bg-white/80 backdrop-blur-md supports-[backdrop-filter]:bg-background/55 shadow-neutral-950/20 shadow-xl">
+      <div className="lg:container mx-auto px-4 lg:px-6">
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-3 hover:opacity-80 transition-opacity">
@@ -44,7 +44,7 @@ export default function ModernNavigation() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex md:items-center md:space-x-8">
             {navItems.map((item) => (
-              <Link key={item.href} href={item.href} className="text-base font-medium text-gray-700 hover:text-gray-900 transition-colors duration-200 hover:underline underline-offset-4">
+              <Link key={item.href} href={item.href} className="text-base font-medium text-gray-800 hover:text-gray-950 transition-colors duration-200 hover:underline underline-offset-4">
                 {item.label}
               </Link>
             ))}
@@ -53,7 +53,7 @@ export default function ModernNavigation() {
           {/* Search Form - Desktop */}
           <div className="hidden md:flex md:items-center md:space-x-3">
             <form onSubmit={handleSearch} className="flex items-center space-x-2">
-              <Input type="search" placeholder="Search player..." value={searchUsername} onChange={(e) => setSearchUsername(e.target.value)} className="w-56 h-9 text-sm" />
+              <Input type="search" placeholder="Search player..." className="w-40 lg:w-56 h-9 text-sm p-2 lg:p-3" value={searchUsername} onChange={(e) => setSearchUsername(e.target.value)} />
               <Button type="submit" size="sm" variant="default" className="h-9 px-3">
                 <Search className="h-4 w-4" />
                 <span className="sr-only">Search</span>

@@ -428,7 +428,7 @@ async function UserContent({ username }: { username: string }) {
                 ))}
               </div>
             </CardContent>
-          </Card>{" "}
+          </Card>
           {/* Main Modes Table - Transposed with Dynamic Stats */}
           <Card className="bg-white/75 backdrop-blur-sm">
             <CardHeader>
@@ -436,7 +436,7 @@ async function UserContent({ username }: { username: string }) {
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto">
-                <table className={clsx("w-full text-sm md:text-base", minecraft.className)}>
+                <table className={clsx("w-full text-sm lg:text-base", minecraft.className)}>
                   <thead>
                     <tr className="border-b">
                       <th className="text-left py-3 px-2"></th>
@@ -517,7 +517,7 @@ async function UserContent({ username }: { username: string }) {
             </CardHeader>
             <CardContent>
               <div className="overflow-x-auto max-w-full">
-                <table className="w-full text-sm min-w-[800px]">
+                <table className={clsx("w-full text-sm lg:text-base", minecraft.className)}>
                   <thead>
                     <tr className="border-b">
                       <th className="text-left py-3 px-2">Mode</th>

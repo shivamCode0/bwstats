@@ -24,16 +24,11 @@ async function getLeaderboardPreview(): Promise<LeaderboardPreview> {
   "use server";
   try {
     const res = await fetch("https://bwstats.shivam.pro/api/leaderboards/preview");
-    if (!res.ok) {
-      throw new Error("Failed to fetch leaderboard preview");
-    }
+    if (!res.ok) throw new Error("Failed to fetch leaderboard preview");
+
     const leaderboardData = await res.json();
 
-    return {
-      level: (leaderboardData.stats.bedwars_level || []).slice(0, 5),
-      wins: (leaderboardData.stats.wins_new || []).slice(0, 5),
-      finalKills: (leaderboardData.stats.final_kills_new || []).slice(0, 5),
-    };
+    return leaderboardData;
   } catch (error) {
     console.error("Failed to fetch leaderboard preview:", error);
     // Return empty data on error instead of failing
