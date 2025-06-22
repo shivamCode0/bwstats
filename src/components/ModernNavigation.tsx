@@ -16,7 +16,7 @@ export default function ModernNavigation() {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchUsername.trim()) {
-      router.push(`/user/${encodeURIComponent(searchUsername.trim())}`);
+      window.location.href = `/user/${encodeURIComponent(searchUsername.trim())}`;
       setSearchUsername("");
       setIsMobileMenuOpen(false);
     }

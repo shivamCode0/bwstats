@@ -45,7 +45,7 @@ export default function ClientHomePage({ exampleUsernames }: ClientHomePageProps
     const trimmedUsername = username.trim();
     if (trimmedUsername) {
       saveToRecentSearches(trimmedUsername);
-      router.push(`/user/${encodeURIComponent(trimmedUsername)}`);
+      window.location.href = `/user/${encodeURIComponent(trimmedUsername)}`;
     } else {
       alert("Enter your username to see your stats.");
     }
@@ -53,7 +53,7 @@ export default function ClientHomePage({ exampleUsernames }: ClientHomePageProps
 
   const handleQuickSearch = (username: string) => {
     saveToRecentSearches(username);
-    router.push(`/user/${encodeURIComponent(username)}`);
+    window.location.href = `/user/${encodeURIComponent(username)}`;
   };
 
   return (
