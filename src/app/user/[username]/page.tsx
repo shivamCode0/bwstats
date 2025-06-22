@@ -8,9 +8,9 @@ import { Loader2, User, Trophy, Target, Shield, Star, Swords, Crown, Coins, Zap,
 import Image from "next/image";
 import { minecraft } from "@/app/fonts/fonts";
 import clsx from "clsx";
-import { getUserData } from "@/lib/getUserData";
 import PlayerSkinView from "@/components/PlayerSkinView";
 import { UserPageSkeleton as UserSkeleton } from "@/components/UserPageSkeleton";
+import { getStatsCached } from "@/lib/getStats";
 
 interface UserPageProps {
   params: Promise<{
@@ -52,7 +52,7 @@ export async function generateMetadata({ params }: UserPageProps) {
   const { username } = await params;
 
   try {
-    const data = await getUserData(username);
+    const data = await getStatsCached(username);
 
     if (!data || !data.success) {
       return {
@@ -129,7 +129,7 @@ async function UserContent({ username }: { username: string }) {
   let data: BWStatsData;
 
   try {
-    data = await getUserData(username);
+    data = await getStatsCached(username);
   } catch (error) {
     const errorMessage = error instanceof Error ? error.message : "An error occurred";
     return <UserError error={errorMessage} />;

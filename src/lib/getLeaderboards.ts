@@ -1,11 +1,9 @@
-import axios from "axios";
 import { BWLeaderboardsData } from "@/types";
-import { getUser } from "./getUser";
+import { getUser } from "./getStats";
 import { getStatsCached } from "./getStats";
-import React from "react";
 import { redisCache } from "./redis";
 
-export async function getLeaderboards(): Promise<BWLeaderboardsData> {
+async function getLeaderboards(): Promise<BWLeaderboardsData> {
   const key = process.env.HYPIXEL_API_KEY;
 
   if (!key) {
@@ -15,12 +13,22 @@ export async function getLeaderboards(): Promise<BWLeaderboardsData> {
   const hypixelTimeStart = Date.now();
 
   try {
-    const response = await axios.get("https://api.hypixel.net/leaderboards", {
-      params: { key },
-    });
+    const response = await fetch(`https://api.hypixel.net/leaderboards?key=${key}`);
+
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`);
+    }
+
+    const data = await response.json();
+    const headers = {
+      remaining: response.headers.get("ratelimit-remaining"),
+      limit: response.headers.get("ratelimit-limit"),
+      reset: response.headers.get("ratelimit-reset"),
+    };
 
     console.log(`Got Hypixel Leaderboards Data after ${(Date.now() - hypixelTimeStart) / 1000}s`);
-    console.log(`Hypixel API Rate Limit: ${response.headers["ratelimit-remaining"]}/${response.headers["ratelimit-limit"]} remaining, resets in ${response.headers["ratelimit-reset"]}s`);
+    console.log(`Hypixel API Rate Limit: ${headers.remaining}/${headers.limit} remaining, resets in ${headers.reset}s`);
+
     interface LeaderboardEntry {
       path: string;
       prefix: string;
@@ -30,7 +38,7 @@ export async function getLeaderboards(): Promise<BWLeaderboardsData> {
       leaders: string[];
     }
 
-    const leaderboards: LeaderboardEntry[] = response.data.leaderboards.BEDWARS;
+    const leaderboards: LeaderboardEntry[] = data.leaderboards.BEDWARS;
 
     const processedLeaderboards = Object.fromEntries(
       leaderboards.map((board) => {
@@ -42,23 +50,15 @@ export async function getLeaderboards(): Promise<BWLeaderboardsData> {
     // Get player details for top leaderboards
     const leaderboardStats: BWLeaderboardsData["stats"] = {};
 
-    // for (const [key, board] of Object.entries({
-    //   level: processedLeaderboards.bedwars_level,
-    //   wins: processedLeaderboards.wins_new,
-    //   finalKills: processedLeaderboards.final_kills_new,
-    // }))
-
-    const getUserCached = React.cache(getUser);
-    const getStatsCachedCached = React.cache(getStatsCached);
     for (const [key, board] of Object.entries(processedLeaderboards)) {
       const typedBoard = board as { leaders: string[] };
       const uuids = typedBoard.leaders;
       const players = await Promise.all(
         uuids.map(async (uuid: string, i) => {
           try {
-            const user = await getUserCached(uuid);
+            const user = await getUser(uuid);
             if (i < 20) {
-              const stats = await getStatsCachedCached(user);
+              const stats = await getStatsCached(user.username);
               return {
                 uuid: stats.uuid,
                 username: stats.username,
@@ -89,36 +89,28 @@ export async function getLeaderboards(): Promise<BWLeaderboardsData> {
       stats: leaderboardStats,
     };
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
-      const errorData = error.response.data;
-      if (errorData.throttle) {
-        throw new Error("The Hypixel API key is being rate-limited");
-      } else if (errorData.cause === "Invalid API key") {
-        throw new Error("Invalid API Key");
-      }
-    }
     console.error("Error fetching leaderboards:", error);
     throw new Error("Failed to fetch leaderboards");
   }
 }
 
-export async function getLeaderboardsCached({ ip = "unknown" }: { ip?: string } = {}): Promise<BWLeaderboardsData> {
+export async function getLeaderboardsCached(): Promise<BWLeaderboardsData> {
   try {
     const cacheKey = "leaderboards";
 
-    // During build time, return empty data to avoid external API calls
-    if (process.env.NODE_ENV === "production" && process.env.NEXT_PHASE === "phase-production-build") {
-      console.log("Build time detected - returning empty leaderboard data");
-      return {
-        stats: {
-          bedwars_level: [],
-          wins_new: [],
-          final_kills_new: [],
-        },
-        cached: false,
-        time: new Date(),
-      };
-    }
+    // // During build time, return empty data to avoid external API calls
+    // if (process.env.NODE_ENV === "production" && process.env.NEXT_PHASE === "phase-production-build") {
+    //   console.log("Build time detected - returning empty leaderboard data");
+    //   return {
+    //     stats: {
+    //       bedwars_level: [],
+    //       wins_new: [],
+    //       final_kills_new: [],
+    //     },
+    //     cached: false,
+    //     time: new Date(),
+    //   };
+    // }
 
     // Try Redis cache first
     const cachedData = await redisCache.get<BWLeaderboardsData>(cacheKey);

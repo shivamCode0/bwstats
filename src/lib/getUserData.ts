@@ -1,8 +1,10 @@
-import { getUser } from "@/lib/getUser";
+import { getUser } from "@/lib/getStats";
 import { getStatsCached } from "@/lib/getStats";
 import { BWStatsData } from "@/types";
 import { cache } from "react";
 import { unstable_cache } from "next/cache";
+
+throw new Error("don't use anything here");
 
 // Simple cached function for development speed
 export const getUserData = cache(async (username: string): Promise<BWStatsData> => {
@@ -23,7 +25,7 @@ async function fetchUserData(username: string): Promise<BWStatsData> {
     }
 
     const user = await getUser(username);
-    const data = await getStatsCached(user, { ip: "unknown" });
+    const data = await getStatsCached(user);
 
     return data;
   } catch (error) {

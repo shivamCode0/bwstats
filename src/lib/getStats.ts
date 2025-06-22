@@ -1,12 +1,38 @@
-import axios from "axios";
 import { PlayerUser, BWStatsData } from "@/types";
 import { FRIENDLY_EXTRA_MODE_NAMES, FRIENDLY_MODE_NAMES } from "./constants";
 import { redisCache } from "./redis";
+import React from "react";
+
+export const getUser = React.cache(async (username: string): Promise<PlayerUser> => {
+  const playerDBTimeStart = Date.now();
+
+  try {
+    const response = await fetch(`https://playerdb.co/api/player/minecraft/${username}`);
+    console.log(`Got PlayerDB Data after ${(Date.now() - playerDBTimeStart) / 1000}s`);
+
+    if (!response.ok) {
+      throw new Error("Player Not Found");
+    }
+
+    const json = await response.json();
+    if (json.success === false) {
+      throw new Error("Player Not Found");
+    }
+
+    return {
+      uuid: json.data.player.id,
+      username: json.data.player.username,
+    };
+  } catch (error) {
+    console.error("Error fetching player:", error);
+    throw new Error("Player Not Found");
+  }
+});
 
 /**
  * Gets Hypixel Bedwars Stats
  */
-export async function getStats({ uuid, username }: PlayerUser): Promise<BWStatsData> {
+async function getStats({ uuid, username }): Promise<BWStatsData> {
   const key = process.env.HYPIXEL_API_KEY;
 
   if (!key) {
@@ -18,14 +44,28 @@ export async function getStats({ uuid, username }: PlayerUser): Promise<BWStatsD
   const hypixelTimeStart = Date.now();
 
   try {
-    const response = await axios.get("https://api.hypixel.net/player", {
-      params: { uuid, key },
-    });
+    const response = await fetch(`https://api.hypixel.net/player?uuid=${uuid}&key=${key}`);
 
-    console.log(`Got Hypixel Data after ${(Date.now() - hypixelTimeStart) / 1000}s`);
-    console.log(`Hypixel API Rate Limit: ${response.headers["ratelimit-remaining"]}/${response.headers["ratelimit-limit"]} remaining, resets in ${response.headers["ratelimit-reset"]}s`);
+    const headers = {
+      remaining: response.headers.get("ratelimit-remaining"),
+      limit: response.headers.get("ratelimit-limit"),
+      reset: response.headers.get("ratelimit-reset"),
+    };
 
-    const json = response.data;
+    console.log(`Got Hypixel Leaderboards Data after ${(Date.now() - hypixelTimeStart) / 1000}s`);
+    console.log(`Hypixel API Rate Limit: ${headers.remaining}/${headers.limit} remaining, resets in ${headers.reset}s`);
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      if (errorData.throttle) {
+        throw new Error("The Hypixel API key is being rate-limited");
+      } else if (errorData.cause === "Invalid API key") {
+        throw new Error("Invalid API Key");
+      }
+      throw new Error("This player did not ever join Hypixel.");
+    }
+
+    const json = await response.json();
 
     if (!json || json.player === null) {
       throw new Error("This player did not ever join Hypixel.");
@@ -154,42 +194,31 @@ export async function getStats({ uuid, username }: PlayerUser): Promise<BWStatsD
 
     return result;
   } catch (error) {
-    if (axios.isAxiosError(error) && error.response) {
-      const errorData = error.response.data;
-      if (errorData.throttle) {
-        throw new Error("The Hypixel API key is being rate-limited");
-      } else if (errorData.cause === "Invalid API key") {
-        throw new Error("Invalid API Key");
-      }
-    }
     throw new Error("This player did not ever join Hypixel.");
   }
 }
 
-export async function getStatsCached(user: PlayerUser, { ip = "unknown" }: { ip?: string } = {}): Promise<BWStatsData> {
+export const getStatsCached = React.cache(async (username: string, uuid?: string): Promise<BWStatsData> => {
   try {
-    const cacheKey = `user:${user.uuid.toLowerCase()}`;
+    // const cacheKey = `user:${user.uuid.toLowerCase()}`;
+    const cacheKey = `user:${username}`;
 
     // Try Redis cache first
     const cachedData = await redisCache.get<BWStatsData>(cacheKey);
-    if (cachedData) {
-      console.log(`Cache HIT for ${user.username} (Redis)`);
-      return { ...cachedData, cached: true };
-    }
-
-    console.log(`Cache MISS for ${user.username} - fetching fresh data`);
+    if (cachedData && (!uuid || cachedData.uuid === uuid)) return { ...cachedData, cached: true };
 
     // No cached data found, fetch fresh data
+    const user = await getUser(username);
     const data = await getStats(user);
 
     // Cache in Redis with 5 minute TTL (don't await to avoid blocking the response)
-    redisCache.set(cacheKey, data, 300).catch((error) => {
-      console.error("Failed to cache user data in Redis:", error);
-    }); 
+    const setPromise = redisCache.set(cacheKey, data, 300).catch((error) => console.error("Failed to cache user data in Redis:", error));
+
+    if (process.env.NEXT_PHASE === "phase-production-build") await setPromise; // Ensure cache is set before returning in production
 
     return data;
   } catch (error) {
     console.error("Error in getStatsCached:", error);
     throw error;
   }
-}
+});
