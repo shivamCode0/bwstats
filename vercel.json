@@ -1,0 +1,31 @@
+{
+  "functions": {
+    "src/app/user/[username]/page.tsx": {
+      "maxDuration": 30
+    }
+  },
+  "headers": [
+    {
+      "source": "/user/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=300, s-maxage=300"
+        }
+      ]
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/user/:path*",
+      "destination": "/user/:path*",
+      "has": [
+        {
+          "type": "header",
+          "key": "x-rate-limited",
+          "value": "true"
+        }
+      ]
+    }
+  ]
+}
