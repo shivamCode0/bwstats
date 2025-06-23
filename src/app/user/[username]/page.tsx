@@ -75,20 +75,10 @@ export async function generateMetadata({ params }: UserPageProps) {
     const fkdr = stats.finalDeaths > 0 ? (stats.finalKills / stats.finalDeaths).toFixed(2) : stats.finalKills.toFixed(2);
     const bblr = stats.bedsLost > 0 ? (stats.bedsBroken / stats.bedsLost).toFixed(2) : stats.bedsBroken.toFixed(2);
     const winRate = stats.gamesPlayed > 0 ? ((stats.wins / stats.gamesPlayed) * 100).toFixed(1) : "0.0";
-
     const title = `${data.username} - Level ${data.stats.level} | BWStats`;
     const description = `${data.username}'s Hypixel Bedwars Stats: Level ${
       data.stats.level
-    }, ${stats.wins?.toLocaleString()} wins, ${fkdr} FKDR, ${bblr} BBLR, ${winRate}% win rate. View complete statistics and performance analytics.`; // Create the OG image URL with all the necessary parameters
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
-    const ogImageUrl = new URL("/api/og", baseUrl);
-    ogImageUrl.searchParams.set("username", data.username);
-    ogImageUrl.searchParams.set("level", data.stats.level.toString());
-    ogImageUrl.searchParams.set("fkdr", fkdr);
-    ogImageUrl.searchParams.set("bblr", bblr);
-    ogImageUrl.searchParams.set("wins", (stats.wins || 0).toString());
-    ogImageUrl.searchParams.set("winRate", winRate);
-    ogImageUrl.searchParams.set("uuid", data.uuid);
+    }, ${stats.wins?.toLocaleString()} wins, ${fkdr} FKDR, ${bblr} BBLR, ${winRate}% win rate. View complete statistics and performance analytics.`;
 
     return {
       title,
@@ -99,23 +89,13 @@ export async function generateMetadata({ params }: UserPageProps) {
         type: "website",
         siteName: "BWStats",
         locale: "en_US",
-        images: [
-          {
-            url: ogImageUrl.toString(),
-            width: 1200,
-            height: 630,
-            alt: `${data.username}'s Bedwars Statistics - Level ${data.stats.level}, ${fkdr} FKDR, ${stats.wins} wins`,
-            type: "image/png",
-          },
-        ],
       },
       twitter: {
         card: "summary_large_image",
         title,
         description,
-        images: [ogImageUrl.toString()],
-        creator: "@BWStats",
-        site: "@BWStats",
+        // creator: "@BWStats",
+        // site: "@BWStats",
       },
       other: {
         "theme-color": "#3b82f6",

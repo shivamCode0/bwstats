@@ -1,37 +1,112 @@
 import { ImageResponse } from "next/og";
-import { NextRequest } from "next/server";
+import { getStatsCached } from "@/lib/getStats";
 
-export async function GET(request: NextRequest) {
+// Image metadata
+export const size = {
+  width: 1200,
+  height: 630,
+};
+
+export const contentType = "image/png";
+
+// Image generation
+export default async function Image({ params }: { params: Promise<{ username: string }> }) {
+  const { username } = await params;
+
   try {
-    const { searchParams } = new URL(request.url);
+    const data = await getStatsCached(username);
 
-    const username = searchParams.get("username");
-    const level = searchParams.get("level");
-    const fkdr = searchParams.get("fkdr");
-    const bblr = searchParams.get("bblr");
-    const wins = searchParams.get("wins");
-    const winRate = searchParams.get("winRate");
-    const uuid = searchParams.get("uuid");
+    if (!data || !data.success) {
+      // Fallback image for users not found
+      return new ImageResponse(
+        (
+          <div
+            style={{
+              height: "100%",
+              width: "100%",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              justifyContent: "center",
+              background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+              fontFamily: "system-ui",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                backgroundColor: "white",
+                borderRadius: "32px",
+                padding: "60px",
+                boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.4)",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                }}
+              >
+                <div
+                  style={{
+                    display: "flex",
+                    fontSize: "72px",
+                    fontWeight: "900",
+                    color: "#dc2626",
+                    marginBottom: "20px",
+                  }}
+                >
+                  {username}
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    fontSize: "24px",
+                    color: "#6b7280",
+                    fontWeight: "600",
+                  }}
+                >
+                  Player not found
+                </div>
+              </div>
+            </div>
+            <div
+              style={{
+                position: "absolute",
+                bottom: "30px",
+                display: "flex",
+                alignItems: "center",
+                color: "white",
+                fontSize: "18px",
+                fontWeight: "600",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  padding: "12px 24px",
+                  background: "rgba(255, 255, 255, 0.25)",
+                  borderRadius: "20px",
+                }}
+              >
+                🎮 bwstats.shivam.pro
+              </div>
+            </div>
+          </div>
+        ),
+        size
+      );
+    }
 
-    // Debug logging
-    console.log("OG Image params:", { username, level, fkdr, bblr, wins, winRate, uuid });
+    const stats = data.stats.modes.total;
+    const fkdr = stats.finalDeaths > 0 ? (stats.finalKills / stats.finalDeaths).toFixed(2) : stats.finalKills.toFixed(2);
+    const bblr = stats.bedsLost > 0 ? (stats.bedsBroken / stats.bedsLost).toFixed(2) : stats.bedsBroken.toFixed(2);
+    const winRate = stats.gamesPlayed > 0 ? ((stats.wins / stats.gamesPlayed) * 100).toFixed(1) : "0.0";
+    const cleanWins = stats.wins?.toLocaleString() || "0";
 
-    if (!username) {
-      return new Response("Missing username parameter", { status: 400 });
-    } // Clean and format values for display
-    const cleanWins = wins;
-    const displayWinRate = winRate ? `${winRate}%` : "0%";
-    const displayFkdr = fkdr || "0.00";
-    const displayBblr = bblr || "0.00";
-    const displayLevel = level || "0";
-
-    console.log("Formatted values:", {
-      cleanWins,
-      displayWinRate,
-      displayFkdr,
-      displayBblr,
-      displayLevel,
-    });
     return new ImageResponse(
       (
         <div
@@ -110,27 +185,25 @@ export async function GET(request: NextRequest) {
                 marginRight: "60px",
               }}
             >
-              {uuid && (
-                <div
+              <div
+                style={{
+                  display: "flex",
+                  padding: "6px",
+                  background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
+                  borderRadius: "20px",
+                  boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.4)",
+                }}
+              >
+                <img
+                  src={`https://crafatar.com/avatars/${data.uuid}?size=140&overlay`}
+                  alt={`${data.username} avatar`}
+                  width={140}
+                  height={140}
                   style={{
-                    display: "flex",
-                    padding: "6px",
-                    background: "linear-gradient(135deg, #3b82f6, #8b5cf6)",
-                    borderRadius: "20px",
-                    boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.4)",
+                    borderRadius: "16px",
                   }}
-                >
-                  <img
-                    src={`https://crafatar.com/avatars/${uuid}?size=140&overlay`}
-                    alt={`${username} avatar`}
-                    width={140}
-                    height={140}
-                    style={{
-                      borderRadius: "16px",
-                    }}
-                  />
-                </div>
-              )}
+                />
+              </div>
               {/* Level badge */}
               <div
                 style={{
@@ -145,7 +218,7 @@ export async function GET(request: NextRequest) {
                   boxShadow: "0 8px 20px -6px rgba(16, 185, 129, 0.5)",
                 }}
               >
-                ⭐ Level {displayLevel}
+                ⭐ Level {data.stats.level}
               </div>
             </div>
 
@@ -168,7 +241,7 @@ export async function GET(request: NextRequest) {
                   letterSpacing: "-1px",
                 }}
               >
-                {username}
+                {data.username}
               </div>
 
               {/* Stats grid */}
@@ -181,9 +254,9 @@ export async function GET(request: NextRequest) {
               >
                 {[
                   { label: "Wins", value: cleanWins, color: "#10b981", bgColor: "#d1fae5", icon: "👑" },
-                  { label: "FKDR", value: displayFkdr, color: "#ef4444", bgColor: "#fee2e2", icon: "⚔️" },
-                  { label: "BBLR", value: displayBblr, color: "#8b5cf6", bgColor: "#ede9fe", icon: "🛏️" },
-                  { label: "Win Rate", value: displayWinRate, color: "#f59e0b", bgColor: "#fef3c7", icon: "📊" },
+                  { label: "FKDR", value: fkdr, color: "#ef4444", bgColor: "#fee2e2", icon: "⚔️" },
+                  { label: "BBLR", value: bblr, color: "#8b5cf6", bgColor: "#ede9fe", icon: "🛏️" },
+                  { label: "Win Rate", value: `${winRate}%`, color: "#f59e0b", bgColor: "#fef3c7", icon: "📊" },
                 ].map((stat, index) => (
                   <div
                     key={index}
@@ -209,7 +282,7 @@ export async function GET(request: NextRequest) {
                         marginBottom: "4px",
                       }}
                     >
-                      {stat.value || "0"}
+                      {stat.value}
                     </div>
                     <div
                       style={{
@@ -251,20 +324,73 @@ export async function GET(request: NextRequest) {
                 boxShadow: "0 8px 32px -8px rgba(0, 0, 0, 0.3)",
               }}
             >
-              🎮 bwstats.shivam.pro/user/{username}
+              🎮 bwstats.shivam.pro/user/{data.username}
             </div>
           </div>
         </div>
       ),
-      {
-        width: 1200,
-        height: 630,
-      }
+      size
     );
-  } catch (e: any) {
-    console.log(`Failed to generate the image: ${e.message}`);
-    return new Response(`Failed to generate the image`, {
-      status: 500,
-    });
+  } catch (error) {
+    // Fallback image for errors
+    return new ImageResponse(
+      (
+        <div
+          style={{
+            height: "100%",
+            width: "100%",
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+            fontFamily: "system-ui",
+          }}
+        >
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              backgroundColor: "white",
+              borderRadius: "32px",
+              padding: "60px",
+              boxShadow: "0 25px 50px -12px rgba(0, 0, 0, 0.4)",
+            }}
+          >
+            <div
+              style={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+              }}
+            >
+              <div
+                style={{
+                  display: "flex",
+                  fontSize: "72px",
+                  fontWeight: "900",
+                  color: "#dc2626",
+                  marginBottom: "20px",
+                }}
+              >
+                Error
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  fontSize: "24px",
+                  color: "#6b7280",
+                  fontWeight: "600",
+                }}
+              >
+                Failed to load user data
+              </div>
+            </div>
+          </div>
+        </div>
+      ),
+      size
+    );
   }
 }
