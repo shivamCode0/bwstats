@@ -80,7 +80,7 @@ export async function generateMetadata({ params }: UserPageProps) {
     const description = `${data.username}'s Hypixel Bedwars Stats: Level ${
       data.stats.level
     }, ${stats.wins?.toLocaleString()} wins, ${fkdr} FKDR, ${bblr} BBLR, ${winRate}% win rate. View complete statistics and performance analytics.`; // Create the OG image URL with all the necessary parameters
-    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "");
     const ogImageUrl = new URL("/api/og", baseUrl);
     ogImageUrl.searchParams.set("username", data.username);
     ogImageUrl.searchParams.set("level", data.stats.level.toString());
