@@ -91,7 +91,7 @@ export default function ClientHomePage({ exampleUsernames }: ClientHomePageProps
 
             {/* Recent searches */}
             {recentSearches.length > 0 ? (
-              <div className="max-w-2xl mx-auto">
+              <div className="max-w-2xl mx-auto text-center">
                 <Card className="bg-white/10 border-white/20 backdrop-blur-sm">
                   <CardHeader className="pb-3">
                     <CardTitle className="text-white flex items-center gap-2">
@@ -112,10 +112,10 @@ export default function ClientHomePage({ exampleUsernames }: ClientHomePageProps
               </div>
             ) : (
               <div className="flex flex-wrap justify-center gap-4 mb-8">
-                {exampleUsernames.slice(0, 4).map((name) => (
+                {exampleUsernames.map((name) => (
                   <Button key={name} variant="outline" onClick={() => handleQuickSearch(name)} className="bg-white/10 border-white/20 text-white hover:bg-white/20 backdrop-blur-sm">
-                    <Gamepad2 className="w-4 h-4 mr-2" />
-                    Try {name}
+                    <Search className="w-4 h-4 mr-2" />
+                    {name}
                   </Button>
                 ))}
               </div>

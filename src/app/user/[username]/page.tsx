@@ -58,6 +58,16 @@ export async function generateMetadata({ params }: UserPageProps) {
       return {
         title: `${username} - Player Not Found | BWStats`,
         description: `Player ${username} not found or has no Bedwars data on BWStats.`,
+        openGraph: {
+          title: `${username} - Player Not Found | BWStats`,
+          description: `Player ${username} not found or has no Bedwars data on BWStats.`,
+          type: "website",
+        },
+        twitter: {
+          card: "summary_large_image",
+          title: `${username} - Player Not Found | BWStats`,
+          description: `Player ${username} not found or has no Bedwars data on BWStats.`,
+        },
       };
     }
 
@@ -69,7 +79,16 @@ export async function generateMetadata({ params }: UserPageProps) {
     const title = `${data.username} - Level ${data.stats.level} | BWStats`;
     const description = `${data.username}'s Hypixel Bedwars Stats: Level ${
       data.stats.level
-    }, ${stats.wins?.toLocaleString()} wins, ${fkdr} FKDR, ${bblr} BBLR, ${winRate}% win rate. View complete statistics and performance analytics.`;
+    }, ${stats.wins?.toLocaleString()} wins, ${fkdr} FKDR, ${bblr} BBLR, ${winRate}% win rate. View complete statistics and performance analytics.`; // Create the OG image URL with all the necessary parameters
+    const baseUrl = process.env.NEXT_PUBLIC_BASE_URL || (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
+    const ogImageUrl = new URL("/api/og", baseUrl);
+    ogImageUrl.searchParams.set("username", data.username);
+    ogImageUrl.searchParams.set("level", data.stats.level.toString());
+    ogImageUrl.searchParams.set("fkdr", fkdr);
+    ogImageUrl.searchParams.set("bblr", bblr);
+    ogImageUrl.searchParams.set("wins", (stats.wins || 0).toString());
+    ogImageUrl.searchParams.set("winRate", winRate);
+    ogImageUrl.searchParams.set("uuid", data.uuid);
 
     return {
       title,
@@ -78,26 +97,46 @@ export async function generateMetadata({ params }: UserPageProps) {
         title,
         description,
         type: "website",
+        siteName: "BWStats",
+        locale: "en_US",
         images: [
           {
-            url: `https://crafatar.com/avatars/${data.uuid}?size=256&overlay`,
-            width: 256,
-            height: 256,
-            alt: `${data.username}'s Minecraft skin`,
+            url: ogImageUrl.toString(),
+            width: 1200,
+            height: 630,
+            alt: `${data.username}'s Bedwars Statistics - Level ${data.stats.level}, ${fkdr} FKDR, ${stats.wins} wins`,
+            type: "image/png",
           },
         ],
       },
       twitter: {
-        card: "summary",
+        card: "summary_large_image",
         title,
         description,
-        images: [`https://crafatar.com/avatars/${data.uuid}?size=256&overlay`],
+        images: [ogImageUrl.toString()],
+        creator: "@BWStats",
+        site: "@BWStats",
+      },
+      other: {
+        "theme-color": "#3b82f6",
+        "apple-mobile-web-app-capable": "yes",
+        "apple-mobile-web-app-status-bar-style": "default",
       },
     };
   } catch (error) {
     return {
       title: `${username} - Error | BWStats`,
       description: `Error loading player data for ${username} on BWStats.`,
+      openGraph: {
+        title: `${username} - Error | BWStats`,
+        description: `Error loading player data for ${username} on BWStats.`,
+        type: "website",
+      },
+      twitter: {
+        card: "summary_large_image",
+        title: `${username} - Error | BWStats`,
+        description: `Error loading player data for ${username} on BWStats.`,
+      },
     };
   }
 }

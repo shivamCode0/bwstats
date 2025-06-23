@@ -10,7 +10,7 @@ export const revalidate = 3600;
 
 export default function Home() {
   // Example usernames for testing
-  const exampleUsernames = ["Technoblade", "Dream", "Grian", "TommyInnit", "Wilbur"];
+  const exampleUsernames = ["Technoblade", "gamerboy80", "WarOG", "shivamCode"];
 
   return (
     <div className="mb-16">
