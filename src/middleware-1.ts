@@ -16,14 +16,12 @@ const ratelimit = new Ratelimit({
 // Helper function to get client IP
 function getClientIP(request: NextRequest): string {
   // Try various headers to get the real client IP
-  // With Cloudflare, CF-Connecting-IP is most reliable
-  const cfIP = request.headers.get("cf-connecting-ip");
-  const realIP = request.headers.get("x-real-ip");
   const forwarded = request.headers.get("x-forwarded-for");
+  const realIP = request.headers.get("x-real-ip");
+  const cfIP = request.headers.get("cf-connecting-ip");
 
   // Use nullish coalescing operator to return the first non-null/undefined value
-  // Priority: CF-Connecting-IP > X-Real-IP > X-Forwarded-For (first IP) > unknown
-  return cfIP ?? realIP ?? forwarded?.split(",")[0].trim() ?? "unknown";
+  return forwarded?.split(",")[0].trim() ?? realIP ?? cfIP ?? "unknown";
 }
 
 // Helper function to log access attempts
@@ -81,16 +79,11 @@ export async function middleware(request: NextRequest) {
   }
   const ip = getClientIP(request);
   const userAgent = request.headers.get("user-agent") || "unknown";
+
   // Skip rate limiting for known search engine crawlers
   const isCrawler = isSearchEngineCrawler(userAgent);
-  
-  // For crawlers, just log and continue (no Redis calls)
-  if (isCrawler) {
-    console.log(`[CRAWLER] ${ip} | ${pathname} | ${userAgent}`);
-    return NextResponse.next();
-  }
-  
-  // Check if IP is blocked first (only for non-crawlers)
+
+  // Check if IP is blocked first
   const blocked = await AccessMonitor.isIPBlocked(ip);
   if (blocked) {
     console.warn(`[BLOCKED_IP] Blocked IP ${ip} attempted to access ${pathname}`);
@@ -106,9 +99,15 @@ export async function middleware(request: NextRequest) {
         headers: {
           "Content-Type": "application/json",
         },
-      }    );
+      }
+    );
   }
-  
+
+  // Skip rate limiting for search engine crawlers but still log them
+  if (isCrawler) {
+    await logAccess(ip, pathname, userAgent, true);
+    return NextResponse.next();
+  }
   try {
     // Check rate limit
     const { success, limit, reset, remaining } = await ratelimit.limit(ip);
