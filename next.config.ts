@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
   // },
 
   images: {
+    // disable until july 30, 2025
+    unoptimized: new Date() < new Date("2025-07-30"),
     remotePatterns: [
       {
         hostname: "crafatar.com",
