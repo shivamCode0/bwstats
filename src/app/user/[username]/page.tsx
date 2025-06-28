@@ -629,7 +629,7 @@ async function UserContent({ username }: { username: string }) {
 }
 
 // Route segment config for partial prerendering
-export const experimental_ppr = true;
+// export const experimental_ppr = true;
 
 // Enable static generation with ISR (production only)
 export const revalidate = 300;
