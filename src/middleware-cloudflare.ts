@@ -28,16 +28,16 @@ function isSearchEngineCrawler(userAgent: string): boolean {
     /twitterbot/i,
     /linkedinbot/i,
     /whatsapp/i,
-    /telegrambot/i
+    /telegrambot/i,
   ];
-  
-  return crawlerPatterns.some(pattern => pattern.test(userAgent));
+
+  return crawlerPatterns.some((pattern) => pattern.test(userAgent));
 }
 
 // Lightweight logging function
 async function logAccess(ip: string, path: string, userAgent: string, success: boolean) {
   const timestamp = new Date().toISOString();
-  
+
   console.log(`[ACCESS] ${success ? "✅" : "❌"} ${timestamp} | IP: ${ip} | Path: ${path} | UA: ${userAgent}`);
 
   // Minimal Redis logging - just daily counters
@@ -60,15 +60,15 @@ export async function middleware(request: NextRequest) {
 
   const ip = getClientIP(request);
   const userAgent = request.headers.get("user-agent") || "unknown";
-  
+
   // Skip processing for known search engine crawlers
   const isCrawler = isSearchEngineCrawler(userAgent);
-  
+
   if (isCrawler) {
     console.log(`[CRAWLER] ${ip} | ${pathname} | ${userAgent}`);
     return NextResponse.next();
   }
-  
+
   // Check if IP is manually blocked (for admin interventions)
   try {
     const blocked = await AccessMonitor.isIPBlocked(ip);
@@ -93,7 +93,6 @@ export async function middleware(request: NextRequest) {
     // Log successful access
     await logAccess(ip, pathname, userAgent, true);
     return NextResponse.next();
-    
   } catch (error) {
     console.error("Middleware error:", error);
     // Continue with request if monitoring fails
