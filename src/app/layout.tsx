@@ -4,8 +4,9 @@ import ModernNavigation from "@/components/ModernNavigation";
 import ModernFooter from "@/components/ModernFooter";
 import { minecraft } from "@/app/fonts/fonts";
 import { GoogleAnalytics } from "@next/third-parties/google";
-import Script from "next/script";
+import { SpeedInsights } from "@vercel/speed-insights/next";
 
+import Script from "next/script";
 export const metadata: Metadata = {
   title: "BW Stats: #1 Hypixel Bedwars Stats Checker",
   description: "This easy and detailed Bedwars stat checker is the best way to see your success. Get all of the info you need in one place.",
@@ -43,6 +44,7 @@ export default function RootLayout({
           <>
             <Script defer src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "fc6b8791fdb34ef18323c982296dda89"}'></Script>
             <GoogleAnalytics gaId="G-RHQSJRV4VB" />
+            <SpeedInsights />
           </>
         )}
       </>
