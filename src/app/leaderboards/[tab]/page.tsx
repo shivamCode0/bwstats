@@ -216,7 +216,7 @@ export default function LeaderboardsPage() {
                                   <div className="absolute top-2 right-2">{getRankIcon(rank)}</div>
                                   <div className="mb-4">
                                     <Image
-                                      src={`https://crafatar.com/avatars/${v.uuid}?size=64&overlay`}
+                                      src={`https://crafatar.com/avatars/${v.uuid}?size=8&overlay`}
                                       alt={`${v.username} avatar`}
                                       width={64}
                                       height={64}
@@ -273,7 +273,7 @@ export default function LeaderboardsPage() {
 
                                       <div className="flex items-center gap-3">
                                         <Image
-                                          src={`https://crafatar.com/avatars/${entry.uuid}?size=40&overlay`}
+                                          src={`https://crafatar.com/avatars/${entry.uuid}?size=8&overlay`}
                                           alt={`${entry.username} avatar`}
                                           width={40}
                                           height={40}

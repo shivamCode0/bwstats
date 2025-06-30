@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { getStatsCached } from "@/lib/getStats";
+import Image from "next/image";
 
 // Image metadata
 export const size = {
@@ -10,7 +11,7 @@ export const size = {
 export const contentType = "image/png";
 
 // Image generation
-export default async function Image({ params }: { params: Promise<{ username: string }> }) {
+export default async function Image1({ params }: { params: Promise<{ username: string }> }) {
   const { username } = await params;
 
   try {
@@ -194,13 +195,14 @@ export default async function Image({ params }: { params: Promise<{ username: st
                   boxShadow: "0 10px 25px -5px rgba(59, 130, 246, 0.4)",
                 }}
               >
-                <img
-                  src={`https://crafatar.com/avatars/${data.uuid}?size=140&overlay`}
+                <Image
+                  src={`https://crafatar.com/avatars/${data.uuid}?size=8&overlay`}
                   alt={`${data.username} avatar`}
                   width={140}
                   height={140}
                   style={{
                     borderRadius: "16px",
+                    imageRendering: "pixelated",
                   }}
                 />
               </div>
