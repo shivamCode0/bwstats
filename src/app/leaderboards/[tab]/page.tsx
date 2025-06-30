@@ -8,7 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Loader2, Trophy, Medal, Award, Crown, Star, TrendingUp, Users, Gamepad2 } from "lucide-react";
 import Image from "next/image";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { minecraft } from "@/app/fonts/fonts";
 import clsx from "clsx";
 import { useParams } from "next/navigation";

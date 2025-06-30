@@ -5,7 +5,7 @@ import { FRIENDLY_LB_NAMES, LB_ORDER } from "@/lib/constants";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Trophy, Crown, Star, TrendingUp, Gamepad2, Swords, Target, Bed, Zap, Users, Medal, Award, ChevronRight, BarChart3 } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { minecraft } from "@/app/fonts/fonts";
 import clsx from "clsx";
 

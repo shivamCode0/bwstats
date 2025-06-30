@@ -1,7 +1,7 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Trophy, Crown, Star, Target, ExternalLink, Medal } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/Link";
 import { getLeaderboardsCached } from "@/lib/getLeaderboards";
 
 interface TopPlayer {

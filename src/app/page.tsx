@@ -2,7 +2,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Search, Users, TrendingUp, Trophy, Crown, Star, Target, ExternalLink, Sparkles, Medal, Zap } from "lucide-react";
-import Link from "next/link";
+import Link from "@/components/Link";
 import ClientHomePage from "./ClientHomePage";
 import LeaderboardPreviewSection from "@/components/LeaderboardPreviewSection";
 
