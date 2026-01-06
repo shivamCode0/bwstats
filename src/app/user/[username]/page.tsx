@@ -267,7 +267,7 @@ async function UserContent({ username }: { username: string }) {
               <div className="flex items-center justify-center gap-3 lg:gap-4 xl:gap-5 mb-2">
                 <Image
                   style={{ imageRendering: "pixelated" }}
-                  src={`https://crafatar.com/avatars/${data.uuid}?size=8&overlay`}
+                  src={`https://api.mineatar.io/face/${data.uuid}?scale=1&overlay=true`}
                   alt={`${data.username} face`}
                   width={64}
                   height={64}

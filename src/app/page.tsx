@@ -27,7 +27,7 @@ export default function Home() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
             <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all hover:scale-105">
               <CardHeader className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full mb-4 shadow-lg">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-neutral-900 rounded-full mb-4 shadow-lg">
                   <Zap className="w-8 h-8 text-white" />
                 </div>
                 <CardTitle className="text-xl font-bold">Lightning Fast Search</CardTitle>
@@ -57,7 +57,7 @@ export default function Home() {
 
             <Card className="bg-white/95 backdrop-blur-sm border-0 shadow-xl hover:shadow-2xl transition-all hover:scale-105">
               <CardHeader className="text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-600 rounded-full mb-4 shadow-lg">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-amber-600 rounded-full mb-4 shadow-lg">
                   <Users className="w-8 h-8 text-white" />
                 </div>
                 <CardTitle className="text-xl font-bold">Live Rankings</CardTitle>
@@ -72,8 +72,8 @@ export default function Home() {
           </div>
 
           {/* Call to action */}
-          <Card className="bg-gradient-to-r from-blue-600 via-purple-600 to-indigo-600 border-0 shadow-2xl text-white relative overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/90 via-purple-600/90 to-indigo-600/90"></div>
+          <Card className="bg-neutral-900 border-0 shadow-2xl text-white relative overflow-hidden">
+            <div className="absolute inset-0 bg-neutral-900/95"></div>
             <CardContent className="relative z-10 text-center py-12">
               <Sparkles className="w-16 h-16 mx-auto mb-6 text-white" />
               <h3 className="text-3xl font-bold mb-4">Ready to Dominate Bedwars?</h3>

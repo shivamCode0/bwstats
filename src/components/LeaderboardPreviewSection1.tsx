@@ -6,15 +6,15 @@ import Link from "@/components/Link";
 export default async function LeaderboardPreviewSection() {
   return (
     <Card className="mb-12 bg-white/95 backdrop-blur-sm border-0 shadow-2xl overflow-hidden">
-      <CardHeader className="text-center bg-gradient-to-r from-purple-600 via-blue-600 to-indigo-600 text-white relative overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-r from-purple-600/90 via-blue-600/90 to-indigo-600/90 backdrop-blur"></div>
+      <CardHeader className="text-center bg-neutral-900 text-white relative overflow-hidden">
+        <div className="absolute inset-0 bg-neutral-900/95 backdrop-blur"></div>
         <div className="relative z-10">
           <CardTitle className="text-4xl font-bold mb-3 flex items-center justify-center gap-3">
             <Trophy className="w-10 h-10" />
             Live Leaderboard Previews
             <Trophy className="w-10 h-10" />
           </CardTitle>
-          <CardDescription className="text-blue-100 text-lg">See the top 100 players in each category.</CardDescription>
+          <CardDescription className="text-gray-200 text-lg">See the top 100 players in each category.</CardDescription>
         </div>
       </CardHeader>
       <CardContent className="p-8">

@@ -62,9 +62,7 @@ export default function ClientHomePage({ exampleUsernames }: ClientHomePageProps
         <div className="w-full h-1/2 flex items-center">
           <div className="hero-text w-full md:w-90/100 xl:w-60/100 px-4">
             <div className="text-center mb-8">
-              <h1 className={clsx("text-6xl md:text-7xl font-bold mb-4 bg-gradient-to-r from-blue-200 via-purple-200 to-pink-200 bg-clip-text text-transparent", minecraft.className)}>
-                Bedwars Stats
-              </h1>
+              <h1 className={clsx("text-6xl md:text-7xl font-bold mb-4 text-white", minecraft.className)}>Bedwars Stats</h1>
               <p className="text-xl md:text-2xl text-white/90 mb-2">Search any player, view leaderboards, and track your progress</p>
             </div>
 
@@ -80,7 +78,7 @@ export default function ClientHomePage({ exampleUsernames }: ClientHomePageProps
                   onChange={(e) => setUsername(e.target.value.replace(/\s/g, ""))}
                   className="flex-1 text-lg py-6 bg-white/10 border-white/20 text-white placeholder:text-white/70 backdrop-blur-sm focus:bg-white/20 transition-all"
                 />
-                <Button type="submit" className="text-lg py-6 px-8 bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 border-0 shadow-lg">
+                <Button type="submit" className="text-lg py-6 px-8 bg-neutral-900 hover:bg-neutral-800 border-0 shadow-lg">
                   <Search className="w-5 h-5 mr-2" />
                   View Stats
                 </Button>

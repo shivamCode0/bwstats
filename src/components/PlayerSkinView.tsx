@@ -11,8 +11,8 @@ interface PlayerSkinViewProps {
 
 export default function PlayerSkinView({ uuid, username }: PlayerSkinViewProps) {
   const onReady: ({ viewer, canvasRef }: ViewerReadyCallbackOptions) => void = ({ viewer, canvasRef }) => {
-    // viewer.setSkinUrl(`https://crafatar.com/skins/${uuid}`);
-    // viewer.setCapeUrl(`https://crafatar.com/capes/${uuid}`);
+    // viewer.setSkinUrl(`https://api.mineatar.io/skin/${uuid}`);
+    // viewer.setCapeUrl(`https://api.mineatar.io/skin/${uuid}`);
     const a = new sv.IdleAnimation();
     a.addAnimation((player, progress, currentId) => {
       player.rotation.y = progress; // Rotate the player around the Y-axis
@@ -23,7 +23,7 @@ export default function PlayerSkinView({ uuid, username }: PlayerSkinViewProps) 
   };
   return (
     <div className="skin-viewer-container">
-      <ReactSkinview3d skinUrl={`https://crafatar.com/skins/${uuid}`} height="430" width="200" onReady={onReady} />
+      <ReactSkinview3d skinUrl={`https://api.mineatar.io/skin/${uuid}`} height="430" width="200" onReady={onReady} />
       <style jsx global>{`
         .skin-viewer-container canvas {
           border-radius: 8px;

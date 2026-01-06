@@ -27,10 +27,10 @@ export default function LeaderboardsPage() {
     } = {
       bedwars_level: {
         icon: Star,
-        color: "blue",
-        gradient: "from-blue-500 to-indigo-600",
-        bgGradient: "from-blue-50 to-indigo-100",
-        borderColor: "border-blue-200",
+        color: "slate",
+        gradient: "from-slate-600 to-slate-800",
+        bgGradient: "from-slate-50 to-slate-100",
+        borderColor: "border-slate-200",
         description: "Compete for the highest Bedwars level",
         metric: "Experience Points",
         estimated: "50,000+",
@@ -95,23 +95,21 @@ export default function LeaderboardsPage() {
           <div className="space-y-8">
             {/* Hero Header Section */}
             <Card className="bg-white/80 backdrop-blur-sm border-0 shadow-2xl">
-              <CardHeader className="text-center py-12 bg-gradient-to-br from-blue-50 to-purple-50 rounded-t-lg">
+              <CardHeader className="text-center py-12 bg-neutral-50 rounded-t-lg">
                 <div className="flex items-center justify-center gap-6 mb-6">
                   <div className="p-4 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full shadow-lg">
                     <Trophy className="w-12 h-12 text-white" />
                   </div>
-                  <CardTitle className={clsx("text-7xl font-bold tracking-wide bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent", minecraft.className)}>
-                    Bedwars Leaderboards
-                  </CardTitle>
+                  <CardTitle className={clsx("text-7xl font-bold tracking-wide text-neutral-900", minecraft.className)}>Bedwars Leaderboards</CardTitle>
                   <div className="p-4 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full shadow-lg">
                     <Trophy className="w-12 h-12 text-white" />
                   </div>
                 </div>
                 <p className="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed">
-                  Compete with the <span className="font-semibold text-blue-600">best players</span> across the world and climb the ranks in various Bedwars statistics
+                  Compete with the <span className="font-semibold text-amber-600">best players</span> across the world and climb the ranks in various Bedwars statistics
                 </p>
                 <div className="flex items-center justify-center gap-6 mt-6">
-                  <Badge className="px-4 py-2 text-sm bg-gradient-to-r from-blue-500 to-purple-500 hover:from-blue-600 hover:to-purple-600">
+                  <Badge className="px-4 py-2 text-sm bg-neutral-900 text-white hover:bg-neutral-800">
                     <Users className="w-4 h-4 mr-2" />
                     Live Rankings
                   </Badge>

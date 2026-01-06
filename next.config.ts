@@ -17,6 +17,12 @@ const nextConfig: NextConfig = {
         hostname: "crafatar.com",
       },
       {
+        hostname: "mineatar.io",
+      },
+      {
+        hostname: "api.mineatar.io",
+      },
+      {
         hostname: "minotar.net",
       },
       {

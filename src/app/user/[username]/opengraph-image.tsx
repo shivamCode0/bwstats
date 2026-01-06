@@ -196,7 +196,7 @@ export default async function Image1({ params }: { params: Promise<{ username: s
                 }}
               >
                 <Image
-                  src={`https://crafatar.com/avatars/${data.uuid}?size=8&overlay`}
+                  src={`https://api.mineatar.io/face/${data.uuid}?scale=1&overlay=true`}
                   alt={`${data.username} avatar`}
                   width={140}
                   height={140}

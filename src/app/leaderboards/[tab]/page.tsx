@@ -53,11 +53,11 @@ export default function LeaderboardsPage() {
   };
 
   const getRankBadgeColor = (rank: number) => {
-    if (rank <= 3) return "bg-gradient-to-r from-purple-300 to-purple-500 text-white";
-    if (rank <= 10) return "bg-gradient-to-r from-green-400 to-green-600 text-white";
-    if (rank <= 20) return "bg-gradient-to-r from-blue-400 to-blue-600 text-white";
-    if (rank <= 50) return "bg-gradient-to-r from-gray-400 to-gray-600 text-white";
-    return "bg-gradient-to-r from-gray-400 to-gray-600 text-white";
+    if (rank <= 3) return "bg-amber-500 text-white";
+    if (rank <= 10) return "bg-emerald-500 text-white";
+    if (rank <= 20) return "bg-stone-600 text-white";
+    if (rank <= 50) return "bg-stone-500 text-white";
+    return "bg-stone-400 text-white";
   };
 
   const getStatIcon = (activeTab: string) => {
@@ -168,14 +168,14 @@ export default function LeaderboardsPage() {
                   <Link href={`/leaderboards/${lbKey}`} className="no-underline group" key={lbKey}>
                     <Card
                       className={`h-full cursor-pointer transition-all duration-300 hover:scale-105 ${
-                        isActive ? "bg-gradient-to-br from-blue-50 to-blue-100 border-blue-300 shadow-lg" : "bg-white/75 backdrop-blur-sm hover:bg-white/90"
+                        isActive ? "bg-amber-50 border-amber-300 shadow-lg" : "bg-white/75 backdrop-blur-sm hover:bg-white/90"
                       }`}
                     >
                       <CardContent className="p-6 text-center">
                         <div className="flex items-center justify-center mb-3">{getStatIcon(lbKey)}</div>
-                        <h3 className={`font-semibold text-lg mb-2 ${isActive ? "text-blue-700" : "text-gray-700"}`}>{FRIENDLY_LB_NAMES[lbKey as keyof typeof FRIENDLY_LB_NAMES]}</h3>
+                        <h3 className={`font-semibold text-lg mb-2 ${isActive ? "text-amber-700" : "text-gray-700"}`}>{FRIENDLY_LB_NAMES[lbKey as keyof typeof FRIENDLY_LB_NAMES]}</h3>
                         <p className="text-sm text-gray-600">{totalPlayers.toLocaleString()} players</p>
-                        {isActive && <Badge className="mt-2 bg-blue-500 hover:bg-blue-600">Currently Viewing</Badge>}
+                        {isActive && <Badge className="mt-2 bg-amber-600 hover:bg-amber-700">Currently Viewing</Badge>}
                       </CardContent>
                     </Card>
                   </Link>
@@ -216,7 +216,7 @@ export default function LeaderboardsPage() {
                                   <div className="absolute top-2 right-2">{getRankIcon(rank)}</div>
                                   <div className="mb-4">
                                     <Image
-                                      src={`https://crafatar.com/avatars/${v.uuid}?size=8&overlay`}
+                                      src={`https://api.mineatar.io/face/${v.uuid}?scale=1&overlay=true`}
                                       alt={`${v.username} avatar`}
                                       width={64}
                                       height={64}
@@ -259,7 +259,7 @@ export default function LeaderboardsPage() {
                                   isTopTen
                                     ? "bg-gradient-to-r from-green-50 to-emerald-50 border-green-200"
                                     : isTopHundred
-                                    ? "bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200"
+                                    ? "bg-gradient-to-r from-stone-50 to-stone-100 border-stone-200"
                                     : "bg-white hover:bg-gray-50"
                                 }`}
                               >
@@ -273,7 +273,7 @@ export default function LeaderboardsPage() {
 
                                       <div className="flex items-center gap-3">
                                         <Image
-                                          src={`https://crafatar.com/avatars/${entry.uuid}?size=8&overlay`}
+                                          src={`https://api.mineatar.io/face/${entry.uuid}?scale=1&overlay=true`}
                                           alt={`${entry.username} avatar`}
                                           width={40}
                                           height={40}
@@ -283,7 +283,7 @@ export default function LeaderboardsPage() {
                                         <div>
                                           <a
                                             href={`/user/${entry.username}`}
-                                            className={clsx("font-semibold hover:underline transition-colors", isTopTen ? "text-green-700 text-lg" : isTopHundred ? "text-blue-700" : "text-gray-700")}
+                                            className={clsx("font-semibold hover:underline transition-colors", isTopTen ? "text-green-700 text-lg" : isTopHundred ? "text-stone-700" : "text-gray-700")}
                                           >
                                             {entry.username}
                                           </a>
@@ -293,7 +293,7 @@ export default function LeaderboardsPage() {
                                     </div>
 
                                     <div className="text-right">
-                                      <div className={clsx("font-bold font-mono", isTopTen ? "text-2xl text-green-600" : isTopHundred ? "text-xl text-blue-600" : "text-lg text-gray-700")}>
+                                      <div className={clsx("font-bold font-mono", isTopTen ? "text-2xl text-green-600" : isTopHundred ? "text-xl text-stone-700" : "text-lg text-gray-700")}>
                                         {getStatValue(entry, activeTab)?.toLocaleString()}
                                       </div>
                                       {isTopTen && (
