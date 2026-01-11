@@ -40,15 +40,14 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  experimental: {
-    ppr: isDev ? false : "incremental",
-  },
+  cacheComponents: true,
+
   typescript: {
     ignoreBuildErrors: true, // This is not recommended for production, but useful for development
   },
-  eslint: {
-    ignoreDuringBuilds: true, // This is not recommended for production, but useful for development
-  },
+  // eslint: {
+  //   ignoreDuringBuilds: true, // This is not recommended for production, but useful for development
+  // },
 };
 
 export default nextConfig;
