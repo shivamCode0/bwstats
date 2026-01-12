@@ -40,7 +40,7 @@ const nextConfig: NextConfig = {
     ],
   },
 
-  cacheComponents: true,
+  // cacheComponents: true,
 
   typescript: {
     ignoreBuildErrors: true, // This is not recommended for production, but useful for development
